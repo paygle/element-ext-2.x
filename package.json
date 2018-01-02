@@ -1,6 +1,6 @@
 {
-  "name": "element-ext-2.x",
-  "version": "2.0.7",
+  "name": "element-ui",
+  "version": "2.0.10",
   "description": "A Component Library for Vue.js.",
   "main": "lib/element-ui.common.js",
   "files": [
@@ -34,17 +34,25 @@
     "domain": "element",
     "public": "temp_web/element"
   },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ElemeFE/element.git"
+  },
+  "homepage": "http://element.eleme.io",
   "keywords": [
     "eleme",
     "vue",
     "components"
   ],
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ElemeFE/element/issues"
+  },
   "unpkg": "lib/index.js",
   "style": "lib/theme-chalk/index.css",
   "dependencies": {
-    "async-validator": "~1.8.1",
-    "babel-helper-vue-jsx-merge-props": "^2.0.0",
+    "async-validator": "^1.8.2",
+    "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "deepmerge": "^1.2.0",
     "throttle-debounce": "^1.0.1"
   },
@@ -111,6 +119,7 @@
     "postcss-loader": "0.11.1",
     "postcss-salad": "^1.0.8",
     "rimraf": "^2.5.4",
+    "rxjs": "^5.5.6",
     "sass-loader": "^6.0.6",
     "sinon": "^1.17.6",
     "sinon-chai": "^2.8.0",
@@ -118,11 +127,12 @@
     "transliteration": "^1.1.11",
     "uppercamelcase": "^1.1.0",
     "url-loader": "^0.6.2",
-    "vue": "^2.5.2",
-    "vue-loader": "^13.3.0",
-    "vue-markdown-loader": "1",
-    "vue-router": "2.7.0",
-    "vue-template-compiler": "^2.5.2",
+    "vue": "^2.5.13",
+    "vue-loader": "^13.6.2",
+    "vue-markdown-loader": "^1.0.0",
+    "vue-router": "^2.7.0",
+    "vue-rx": "^5.0.0",
+    "vue-template-compiler": "^2.5.13",
     "vue-template-es2015-compiler": "^1.6.0",
     "webpack": "^3.7.1",
     "webpack-dev-server": "^2.9.1",
