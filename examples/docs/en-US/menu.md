@@ -305,6 +305,8 @@ Vertical NavMenu could be collapsed.
 | Attribute      | Description          | Type      | Accepted Values       | Default  |
 |---------- |-------- |---------- |-------------  |-------- |
 | index     | unique identification   | string  | — | — |
+| show-timeout | timeout before showing a sub-menu | number | — | 300 |
+| hide-timeout | timeout before hiding a sub-menu | number | — | 300 |
 
 ### Menu-Item Attribute
 | Attribute      | Description          | Type      | Accepted Values       | Default  |
