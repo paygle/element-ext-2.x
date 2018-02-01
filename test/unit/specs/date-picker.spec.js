@@ -500,6 +500,76 @@ describe('DatePicker', () => {
         }, DELAY);
       }, DELAY);
     });
+
+    it('is timestamp', done => {
+      vm = createVue({
+        template: `
+          <el-date-picker
+            ref="compo"
+            v-model="value"
+            type="date"
+            format="yyyy-MM-dd"
+            value-format="timestamp" />`,
+        data() {
+          return {
+            value: Date.now()
+          };
+        }
+      }, true);
+      const input = vm.$refs.compo.$el.querySelector('input');
+      input.focus();
+      setTimeout(_ => {
+        // check timestamp is parsed internally
+        expect(vm.$refs.compo.parsedValue.getTime()).to.equal(vm.value);
+        input.value = '2000-10-01';
+        triggerEvent(input, 'input');
+        keyDown(input, ENTER);
+        setTimeout(_ => {
+          expect(vm.value).to.equal(new Date(2000, 9, 1).getTime());
+          done();
+        }, DELAY);
+      }, DELAY);
+    });
+
+    it('works for daterange, is timestamp', done => {
+      vm = createVue({
+        template: `
+          <el-date-picker
+            ref="compo"
+            v-model="value"
+            type="daterange"
+            format="yyyy-MM-dd"
+            value-format="timestamp" />`,
+        data() {
+          return {
+            value: [Date.now(), Date.now() + 86400 * 1000]
+          };
+        }
+      }, true);
+      const inputs = vm.$refs.compo.$el.querySelectorAll('input');
+      inputs[0].focus();
+      setTimeout(_ => {
+        // check timestamp is parsed internally
+        expect(vm.$refs.compo.parsedValue[0].getTime()).to.equal(vm.value[0]);
+        expect(vm.$refs.compo.parsedValue[1].getTime()).to.equal(vm.value[1]);
+        inputs[0].value = '2000-10-01';
+        triggerEvent(inputs[0], 'input');
+        keyDown(inputs[0], TAB);
+        setTimeout(_ => {
+          inputs[1].focus();
+          inputs[1].value = '2000-10-02';
+          triggerEvent(inputs[1], 'input');
+          keyDown(inputs[0], ENTER);
+          setTimeout(_ => {
+            expect(vm.value).to.eql([
+              new Date(2000, 9, 1).getTime(),
+              new Date(2000, 9, 2).getTime()
+            ]);
+            done();
+          }, DELAY);
+        }, DELAY);
+      }, DELAY);
+    });
   });
 
   describe('default value', done => {
@@ -777,6 +847,24 @@ describe('DatePicker', () => {
           expect(getYearLabel()).to.include('2007');
           expect(getMonthLabel()).to.include('2');
           done();
+        });
+      });
+    });
+
+    it('month label with fewer dates', done => {
+      navigationTest(new Date(2000, 6, 31), _ => {
+        const $el = vm.$refs.compo.picker.$el;
+        const monthLabel = $el.querySelectorAll('.el-date-picker__header-label')[1];
+        click(monthLabel, _ => {
+          setTimeout(_ => {
+            const juneLabel = $el.querySelectorAll('.el-month-table td a')[5];
+            juneLabel.click();
+            setTimeout(_ => {
+              expect(getYearLabel()).to.include('2000');
+              expect(getMonthLabel()).to.include('6');
+              done();
+            }, DELAY);
+          }, DELAY);
         });
       });
     });
@@ -1140,6 +1228,32 @@ describe('DatePicker', () => {
               done();
             }, DELAY);
           }, DELAY);
+        }, DELAY);
+      }, DELAY);
+    });
+
+    it('type:daterange unlink:true', done => {
+      vm = createVue({
+        template: '<el-date-picker type="daterange" unlink-panels v-model="value" ref="compo" />',
+        data() {
+          return {
+            value: [new Date(2000, 9, 1), new Date(2000, 9, 2)]
+          };
+        }
+      }, true);
+
+      const rangePicker = vm.$refs.compo;
+      const inputs = rangePicker.$el.querySelectorAll('input');
+      setTimeout(_ => {
+        inputs[0].focus();
+        setTimeout(_ => {
+          const panels = rangePicker.picker.$el.querySelectorAll('.el-date-range-picker__content');
+          const left = panels[0].querySelector('.el-date-range-picker__header');
+          const right = panels[1].querySelector('.is-right .el-date-range-picker__header');
+          const leftText = left.textContent.match(/\d+/g).map(i => Number(i));
+          const rightText = right.textContent.match(/\d+/g).map(i => Number(i));
+          expect(rightText[1] - leftText[1]).to.equal(1); // one month
+          done();
         }, DELAY);
       }, DELAY);
     });
