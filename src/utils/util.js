@@ -82,3 +82,42 @@ export const valueEquals = (a, b) => {
   }
   return true;
 };
+
+/**
+ * @author liuxp
+ * 扩展-> 数据对象类型判断
+ * 支持返回类型：String、 Number、Boolean、Array、Object、Function、Date、Math...
+ */
+export const TypeOf = (o) => {
+  let type = typeof o !== 'undefined' ? Object.prototype.toString.call(o) : undefined;
+  if (type) {
+    type = String(type).replace(/object\s+\w+/, function(rep) {
+      return rep.replace(/object\s+/, '');
+    }).replace(/[\[\]]*/g, '');
+  }
+  return type;
+};
+
+// 扩展-> 自定义转换日期格式为斜杠 YYYY/MM/DD/ HH:MM:SS 兼容格式
+export const compatDateStr = function(date) {
+  function getZerov(v) { return v < 10 ? '0' + parseInt(v, 10) : v; }
+  if (typeof date === 'string') {
+    let t = date.split(':');
+    let dt = new Date(), Y = dt.getFullYear(), M = dt.getMonth() + 1, D = dt.getDate();
+    if (/^\d{1,2}(:\d{1,2}){0,2}$/.test(date)) {
+      if (t.length === 1) {
+        return Y + '/' + M + '/' + D + ' ' + getZerov(t[0]) + ':00:00';
+      } else if (t.length === 2) {
+        return Y + '/' + M + '/' + D + ' ' + getZerov(t[0]) + ':' + getZerov(t[1]) + ':00';
+      } else if (t.length === 3) {
+        return Y + '/' + M + '/' + D + ' ' + getZerov(t[0]) + ':' + getZerov(t[1]) + ':' + getZerov(t[2]);
+      } else {
+        return dt;
+      }
+    } else {
+      return String(date).replace(/\-/g, '/');
+    }
+  } else {
+    return date;
+  }
+};
