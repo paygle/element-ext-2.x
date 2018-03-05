@@ -33,13 +33,13 @@
 <script>
   import AsyncValidator from 'async-validator';
   import emitter from 'element-ui/src/mixins/emitter';
-  import objectAssign from 'element-ui/src/utils/merge';
+  // import objectAssign from 'element-ui/src/utils/merge';
   import { noop, TypeOf, compatDateStr } from 'element-ui/src/utils/util';
 
   export default {
     name: 'ElTableItem',
 
-    componentName: 'ElTableItem',
+    componentName: 'ElFormItem',
 
     mixins: [emitter],
 
@@ -55,13 +55,13 @@
       // label: String,
       // labelWidth: String,
       value: {},
-      prop: Object,       // 包含 { $index, row, column, store, _self }
+      prop: Object, // 包含 { $index, row, column, store, _self }
       property: String,
       required: {
         type: Boolean,
         default: undefined
       },
-      rules: Object,
+      ruler: Object, // 表格表单规则集
       // error: String,
       // validateStatus: String,
       // for: String,
@@ -88,8 +88,8 @@
       // }
     },
     computed: {
-      rule() {
-        return this.rules ? this.rules[this.prop.column.property] : undefined; // 获取当前属性的校验规则
+      rules() {
+        return this.ruler ? this.ruler[this.prop.column.property] : undefined; // 获取当前属性的校验规则
       },
       // labelFor() {
       //   return this.for || this.prop;
@@ -114,34 +114,35 @@
       //   }
       //   return ret;
       // },
-      form() {
-        let parent = this.$parent;
-        let parentName = parent.$options.componentName;
-        while (parentName !== 'ElFormTable') { // 扩展修改
-          if (parentName === 'ElTableItem') { // 扩展修改
-            this.isNested = true;
-          }
-          parent = parent.$parent;
-          parentName = parent.$options.componentName;
+      // form() {
+      //   let parent = this.$parent;
+      //   let parentName = parent.$options.componentName;
+      //   while (parentName !== 'ElFormTable') { // 扩展修改
+      //     if (parentName === 'ElTableItem') { // 扩展修改
+      //       this.isNested = true;
+      //     }
+      //     parent = parent.$parent;
+      //     parentName = parent.$options.componentName;
+      //   }
+      //   return parent;
+      // },
+
+      isRequired() {
+        let rules = this.rules;
+        let isRequired = false;
+
+        if (rules && rules.length) {
+          rules.every(rule => {
+            if (rule.required) {
+              isRequired = true;
+              return false;
+            }
+            return true;
+          });
         }
-        return parent;
+        return isRequired;
       },
 
-      // isRequired() {
-      //   let rules = this.getRules();
-      //   let isRequired = false;
-
-      //   if (rules && rules.length) {
-      //     rules.every(rule => {
-      //       if (rule.required) {
-      //         isRequired = true;
-      //         return false;
-      //       }
-      //       return true;
-      //     });
-      //   }
-      //   return isRequired;
-      // },
       _formSize() {
         return this.elForm.size;
       },
@@ -157,33 +158,33 @@
         validateState: '',
         validateMessage: '',
         validateDisabled: false,
-        validator: {},
-        isNested: false
+        validator: {}
+        // isNested: false
       };
     },
     methods: {
       // 扩展-> 获取类型数值
-      getTypeOfVal(value, rules){
+      getTypeOfVal(value, rules) {
 
-        let typevalue = "", type, cdate;
+        let typevalue = '', type, cdate;
 
-        if(TypeOf(rules) === 'Array'){
-          for(let i=0; i<rules.length; i++){
+        if (TypeOf(rules) === 'Array') {
+          for (let i = 0; i < rules.length; i++) {
             type = rules[i].type ? rules[i].type : 'string';
-            if(TypeOf(rules[i]) === 'Object' && rules[i]['type'] === 'date' && TypeOf(value) === "String"){
+            if (TypeOf(rules[i]) === 'Object' && rules[i]['type'] === 'date' && TypeOf(value) === 'String') {
               cdate = new Date(compatDateStr(value));
             }
           }
-        }else if(TypeOf(rules) === 'Object' && rules.type === 'date' && TypeOf(value) === "String"){
+        } else if (TypeOf(rules) === 'Object' && rules.type === 'date' && TypeOf(value) === 'String') {
           type = rules.type ? rules.type : 'string';
           cdate = new Date(compatDateStr(value));
         }
 
-        if(TypeOf(value) === 'Date'){
+        if (TypeOf(value) === 'Date') {
           typevalue = value;
-        }else if(TypeOf(cdate) === 'Date' && !isNaN(cdate.getTime())){
+        } else if (TypeOf(cdate) === 'Date' && !isNaN(cdate.getTime())) {
           typevalue = cdate;
-        }else{
+        } else {
           typevalue = value;
         }
 
@@ -243,7 +244,7 @@
         // });
 
         // const regxNumber = /^\d*\.?\d*$/g;
-        const {$index, row, column, store} =  this.prop;
+        const {$index, row, column, store} = this.prop;
 
         // 验证样式设置
         this.$nextTick(()=> {
@@ -255,26 +256,26 @@
           }
         });
 
-        if(TypeOf(this.value) === 'Array')  return; //类型为数组时不校验
+        if (TypeOf(this.value) === 'Array') return; // 类型为数组时不校验
 
-        if(this.rule){ // 存在规则才进行校验
+        if (this.rules) { // 存在规则才进行校验
           this.validateState = 'validating';
           let descriptor = {}, model = {};
-          descriptor[column.property] = this.rule;
+          descriptor[column.property] = this.rules;
           let validator = new AsyncValidator(descriptor);
 
-          model[column.property] = this.getTypeOfVal(this.value, this.rule);
-          validator.validate(model, { firstFields: true, row : row }, (errors, fields) => {
+          model[column.property] = this.getTypeOfVal(this.value, this.rules);
+          validator.validate(model, { firstFields: true, row: row }, (errors, fields) => {
             this.validateState = !errors ? 'success' : 'error';
             this.validateMessage = errors ? errors[0].message : '';
             callback(errors);
           });
         }
 
-        if(column.property){
-          if(this.validateState != 'error'){
+        if (column.property) {
+          if (this.validateState !== 'error') {
             store.commit('disErrCount', `row${$index + column.property}`);
-          }else{
+          } else {
             store.commit('setErrCount', `row${$index + column.property}`);
           }
         }
@@ -286,7 +287,7 @@
         this.validateDisabled = false;
       },
       resetField() {
-        let { row, column, store } = this.prop;
+        let { row, column } = this.prop;
         this.validateState = '';
         this.validateMessage = '';
 
@@ -312,7 +313,7 @@
     },
     mounted() {
 
-      if (this.prop.column.type !== 'default' ) {
+      if (this.prop.column.type === 'input') {
         this.dispatch('ElFormTable', 'el.form.addField', [this]); // 扩展修改
 
         let initialValue = this.value;
@@ -323,7 +324,7 @@
           value: initialValue
         });
 
-        if (this.rule.length || this.required !== undefined) {
+        if (this.rules && this.rules.length || this.isRequired) {
           this.$on('el.form.blur', this.onFieldBlur);
           this.$on('el.form.change', this.onFieldChange);
         }

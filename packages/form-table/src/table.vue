@@ -1,4 +1,6 @@
 <template>
+<div class="wrap-table">
+  <span class="total-err" v-text="errTotal"></span>
   <div class="el-form-table el-table"
     :class="[{
       'el-table--fit': fit,
@@ -210,6 +212,7 @@
       }"></div>
     <div class="el-table__column-resize-proxy" ref="resizeProxy" v-show="resizeProxyVisible"></div>
   </div>
+</div>
 </template>
 
 <script type="text/babel">
@@ -322,7 +325,7 @@
         type: Boolean,
         default: true
       },
-      disableField: [String, Object] , // 扩展-> 是否使用禁用字段
+      disableField: [String, Object], // 扩展-> 是否使用禁用字段
 
       initDisfields: Object, // 扩展-> 禁用字段初始化映射 如：{aa:true, bb:false}
 
@@ -344,7 +347,7 @@
         default: false
       },
 
-      expandIconHidden:{ // 扩展-> 是否隐藏展开图标
+      expandIconHidden: { // 扩展-> 是否隐藏展开图标
         type: Boolean,
         default: false
       },
@@ -553,8 +556,12 @@
         if (!field) { throw new Error('must call validateField with valid prop string!'); }
 
         field.validate('', cb);
-      }
+      },
 
+      // 扩展-> 错误统计
+      errChange() {
+        this.$nextTick(function() { this.errNum = this.store.getErrCount(this.store.states); });
+      }
     },
 
     created() {
@@ -562,16 +569,10 @@
       this.debouncedUpdateLayout = debounce(50, () => this.doLayout());
 
       // 扩展验证
-      this.$on('el.form.addField', (field) => {
-        if (field) {
-          this.fields.push(field);
-        }
-      });
+      this.$on('el.form.addField', (field) => { if (field) { this.fields.push(field); } });
       // 扩展验证
       this.$on('el.form.removeField', (field) => {
-        if (field.prop) {
-          this.fields.splice(this.fields.indexOf(field), 1);
-        }
+        if (field.prop) { this.fields.splice(this.fields.indexOf(field), 1); }
       });
     },
 
@@ -715,10 +716,27 @@
         }
       },
 
-      rules() { // 扩展验证 -> 规则监控
+      rules() { // 扩展-> 规则监控
         if (this.validateOnRuleChange) {
           this.validate(() => {});
         }
+      },
+
+      errNum(n) { // 扩展-> 错误监控
+        if (this.errNum > 0) {
+          this.errTotal = '验证消息：以下表单中共有 ' + this.errNum + ' 处内容错误，待完善。';
+        } else {
+          this.errTotal = '';
+        }
+      },
+
+      'store.states.data'(n) { // 扩展-> 删除行后的数据验证
+        this.store.states.errCount = {};
+        this.$nextTick(function() {
+          this.validate(()=>{});
+          this.$emit('err-change');
+          this.store.states.delStatus = false;
+        });
       }
     },
 
@@ -748,6 +766,9 @@
       });
 
       this.$ready = true;
+
+      this.$on('err-change', this.errChange); // 扩展
+
     },
 
     data() {
@@ -774,7 +795,11 @@
         // 是否拥有多级表头
         isGroup: false,
         scrollPosition: 'left',
-        fields: [] // 验证扩展 -> 验证字段
+        fields: [], // 扩展 -> 验证字段
+        errNum: 0, // 扩展 -> 错误数
+        errTotal: '', // 扩展 -> 错误统计
+        ctrlKey: false, // 扩展
+        timeHanlder: null // 扩展
       };
     }
   };

@@ -149,7 +149,7 @@ const compareChgStyl = function(table, states) {
   }
 };
 
-// 扩展-> 设置Tab index值
+// 扩展-> 设置Tab index  Key/Val 值
 const setTabindex = function(direction = 'vertical', startindex = 1, orginData = [], colIndexs = []) {
 
   if (!orginData.length) return [];
@@ -263,7 +263,7 @@ const TableStore = function(table, initialState = {}) {
     filters: {},
     expandRows: [],
     defaultExpandAll: false,
-    _tabidxs: [], // 扩展
+    _tabidxs: [], // 扩展  Tab index 映射
     direction: 'vertical', // 扩展
     colIndexOrder: [], // 扩展
     errCount: {}, // 扩展-> 错误总数统计 {row0col:true}
@@ -776,6 +776,15 @@ const doFlattenColumns = (columns) => {
     }
   });
   return result;
+};
+
+// 扩展-> 计算错误统计
+TableStore.prototype.getErrCount = function(states) {
+  let c = 0;
+  for (let i in states.errCount) {
+    if (states.errCount[i]) c++;
+  }
+  return c;
 };
 
 // 扩展-> 设置列Tab index 的值

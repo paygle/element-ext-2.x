@@ -417,6 +417,7 @@
       style="width: 100%">
       <el-form-table-column
         prop="name"
+        type="input"
         label="姓名"
         width="180">
         <template slot-scope="mdl">
@@ -470,7 +471,7 @@
 :::demo `stripe`属性可以创建带斑马纹的表格。它接受一个`Boolean`，默认为`false`，设置为`true`即为启用。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData"
     stripe
     style="width: 100%">
@@ -488,33 +489,33 @@
       prop="address"
       label="地址">
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
-      }
-    }
-  }
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData: [{
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1517 弄'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1519 弄'
+  //       }, {
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1516 弄'
+  //       }]
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -524,7 +525,7 @@
 :::demo 默认情况下，Table 组件是不具有竖直方向的边框的，如果需要，可以使用`border`属性，它接受一个`Boolean`，设置为`true`即可启用。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData"
     border
     style="width: 100%">
@@ -542,33 +543,33 @@
       prop="address"
       label="地址">
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
-      }
-    }
-  }
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData: [{
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1517 弄'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1519 弄'
+  //       }, {
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1516 弄'
+  //       }]
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -580,7 +581,7 @@
 :::demo 可以通过指定 Table 组件的 `row-class-name` 属性来为 Table 中的某一行添加 class，表明该行处于某种状态。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData2"
     style="width: 100%"
     :row-class-name="tableRowClassName">
@@ -598,7 +599,7 @@
       prop="address"
       label="地址">
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <style>
@@ -612,39 +613,39 @@
 </style>
 
 <script>
-  export default {
-    methods: {
-      tableRowClassName({row, rowIndex}) {
-        if (rowIndex === 1) {
-          return 'warning-row';
-        } else if (rowIndex === 3) {
-          return 'success-row';
-        }
-        return '';
-      }
-    },
-    data() {
-      return {
-        tableData2: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
-      }
-    }
-  }
+  // export default {
+  //   methods: {
+  //     tableRowClassName({row, rowIndex}) {
+  //       if (rowIndex === 1) {
+  //         return 'warning-row';
+  //       } else if (rowIndex === 3) {
+  //         return 'success-row';
+  //       }
+  //       return '';
+  //     }
+  //   },
+  //   data() {
+  //     return {
+  //       tableData2: [{
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //       }, {
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }]
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -656,7 +657,7 @@
 :::demo 只要在`el-form-table`元素中定义了`height`属性，即可实现固定表头的表格，而不需要额外的代码。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData3"
     height="250"
     border
@@ -675,45 +676,45 @@
       prop="address"
       label="地址">
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }]
-      }
-    }
-  }
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData3: [{
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-08',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-06',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-07',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }]
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -725,7 +726,7 @@
 :::demo 固定列需要使用`fixed`属性，它接受 Boolean 值或者`left` `right`，表示左边固定还是右边固定。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData"
     border
     style="width: 100%">
@@ -769,51 +770,51 @@
         <el-button type="text" size="small">编辑</el-button>
       </template>
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    methods: {
-      handleClick(row) {
-        console.log(row);
-      }
-    },
+  // export default {
+  //   methods: {
+  //     handleClick(row) {
+  //       console.log(row);
+  //     }
+  //   },
 
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
-      }
-    }
-  }
+  //   data() {
+  //     return {
+  //       tableData: [{
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }]
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -825,7 +826,7 @@
 :::demo 固定列和表头可以同时使用，只需要将上述两个属性分别设置好即可。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData3"
     style="width: 100%"
     height="250">
@@ -860,66 +861,66 @@
       label="邮编"
       width="120">
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
-      }
-    }
-  }
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData3: [{
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-08',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-06',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-07',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }]
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -931,7 +932,7 @@
 :::demo 通过设置`max-height`属性为 Table 指定最大高度。此时若表格所需的高度大于最大高度，则会显示一个滚动条。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData4"
     style="width: 100%"
     max-height="250">
@@ -979,71 +980,71 @@
         </el-button>
       </template>
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    methods: {
-      deleteRow(index, rows) {
-        rows.splice(index, 1);
-      }
-    },
-    data() {
-      return {
-        tableData4: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
-      }
-    }
-  }
+  // export default {
+  //   methods: {
+  //     deleteRow(index, rows) {
+  //       rows.splice(index, 1);
+  //     }
+  //   },
+  //   data() {
+  //     return {
+  //       tableData4: [{
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-08',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-06',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-07',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }]
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -1055,7 +1056,7 @@
 :::demo 只需要在 el-form-table-column 里面嵌套 el-form-table-column，就可以实现多级表头。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData3"
     style="width: 100%">
     <el-form-table-column
@@ -1092,66 +1093,66 @@
         </el-form-table-column>
       </el-form-table-column>
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333
-        }]
-      }
-    }
-  }
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData3: [{
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-08',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-06',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }, {
+  //         date: '2016-05-07',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333
+  //       }]
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -1163,7 +1164,7 @@
 :::demo Table 组件提供了单选的支持，只需要配置`highlight-current-row`属性即可实现单选。之后由`current-change`事件来管理选中时触发的事件，它会传入`currentRow`，`oldCurrentRow`。如果需要显示索引，可以增加一列`el-form-table-column`，设置`type`属性为`index`即可显示从 1 开始的索引号。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     ref="singleTable"
     :data="tableData"
     highlight-current-row
@@ -1191,43 +1192,43 @@
   <div style="margin-top: 20px">
     <el-button @click="setCurrent(tableData[1])">选中第二行</el-button>
     <el-button @click="setCurrent()">取消选择</el-button>
-  </div>
+  </div> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }],
-        currentRow: null
-      }
-    },
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData: [{
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1517 弄'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1519 弄'
+  //       }, {
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1516 弄'
+  //       }],
+  //       currentRow: null
+  //     }
+  //   },
 
-    methods: {
-      setCurrent(row) {
-        this.$refs.singleTable.setCurrentRow(row);
-      },
-      handleCurrentChange(val) {
-        this.currentRow = val;
-      }
-    }
-  }
+  //   methods: {
+  //     setCurrent(row) {
+  //       this.$refs.singleTable.setCurrentRow(row);
+  //     },
+  //     handleCurrentChange(val) {
+  //       this.currentRow = val;
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -1239,7 +1240,7 @@
 :::demo 实现多选非常简单: 手动添加一个`el-form-table-column`，设`type`属性为`selection`即可；默认情况下若内容过多会折行显示，若需要单行显示可以使用`show-overflow-tooltip`属性，它接受一个`Boolean`，为`true`时多余的内容会在 hover 时以 tooltip 的形式显示出来。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     ref="multipleTable"
     :data="tableData3"
     tooltip-effect="dark"
@@ -1268,61 +1269,61 @@
   <div style="margin-top: 20px">
     <el-button @click="toggleSelection([tableData3[1], tableData3[2]])">切换第二、第三行的选中状态</el-button>
     <el-button @click="toggleSelection()">取消选择</el-button>
-  </div>
+  </div> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData3: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-08',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-06',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-07',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }],
-        multipleSelection: []
-      }
-    },
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData3: [{
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-08',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-06',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-07',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }],
+  //       multipleSelection: []
+  //     }
+  //   },
 
-    methods: {
-      toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
-      },
-      handleSelectionChange(val) {
-        this.multipleSelection = val;
-      }
-    }
-  }
+  //   methods: {
+  //     toggleSelection(rows) {
+  //       if (rows) {
+  //         rows.forEach(row => {
+  //           this.$refs.multipleTable.toggleRowSelection(row);
+  //         });
+  //       } else {
+  //         this.$refs.multipleTable.clearSelection();
+  //       }
+  //     },
+  //     handleSelectionChange(val) {
+  //       this.multipleSelection = val;
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -1334,7 +1335,7 @@
 :::demo 在列中设置`sortable`属性即可实现以该列为基准的排序，接受一个`Boolean`，默认为`false`。可以通过 Table 的`default-sort`属性设置默认的排序列和排序顺序。可以使用`sort-method`或者`sort-by`使用自定义的排序规则。如果需要后端排序，需将`sortable`设置为`custom`，同时在 Table 上监听`sort-change`事件，在事件回调中可以获取当前排序的字段名和排序顺序，从而向接口请求排序后的表格数据。在本例中，我们还使用了`formatter`属性，它用于格式化指定列的值，接受一个`Function`，会传入两个参数：`row`和`column`，可以根据自己的需求进行处理。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData"
     style="width: 100%"
     :default-sort = "{prop: 'date', order: 'descending'}"
@@ -1356,38 +1357,38 @@
       label="地址"
       :formatter="formatter">
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
-      }
-    },
-    methods: {
-      formatter(row, column) {
-        return row.address;
-      }
-    }
-  }
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData: [{
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1517 弄'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1519 弄'
+  //       }, {
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1516 弄'
+  //       }]
+  //     }
+  //   },
+  //   methods: {
+  //     formatter(row, column) {
+  //       return row.address;
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -1399,7 +1400,7 @@
 :::demo 在列中设置`filters` `filter-method`属性即可开启该列的筛选，filters 是一个数组，`filter-method`是一个方法，它用于决定某些数据是否显示，会传入三个参数：`value`, `row` 和 `column`。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData"
     style="width: 100%">
     <el-form-table-column
@@ -1434,49 +1435,49 @@
           close-transition>{{scope.row.tag}}</el-tag>
       </template>
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄',
-          tag: '家'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄',
-          tag: '公司'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄',
-          tag: '家'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄',
-          tag: '公司'
-        }]
-      }
-    },
-    methods: {
-      formatter(row, column) {
-        return row.address;
-      },
-      filterTag(value, row) {
-        return row.tag === value;
-      },
-      filterHandler(value, row, column) {
-        const property = column['property'];
-        return row[property] === value;
-      }
-    }
-  }
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData: [{
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         tag: '家'
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1517 弄',
+  //         tag: '公司'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1519 弄',
+  //         tag: '家'
+  //       }, {
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1516 弄',
+  //         tag: '公司'
+  //       }]
+  //     }
+  //   },
+  //   methods: {
+  //     formatter(row, column) {
+  //       return row.address;
+  //     },
+  //     filterTag(value, row) {
+  //       return row.tag === value;
+  //     },
+  //     filterHandler(value, row, column) {
+  //       const property = column['property'];
+  //       return row[property] === value;
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -1487,7 +1488,7 @@
 :::demo 通过 `Scoped slot` 可以获取到 row, column, $index 和 store（table 内部的状态管理）的数据，用法参考 demo。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData"
     style="width: 100%">
     <el-form-table-column
@@ -1522,41 +1523,41 @@
           @click="handleDelete(scope.$index, scope.row)">删除</el-button>
       </template>
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }]
-      }
-    },
-    methods: {
-      handleEdit(index, row) {
-        console.log(index, row);
-      },
-      handleDelete(index, row) {
-        console.log(index, row);
-      }
-    }
-  }
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData: [{
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1518 弄'
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1517 弄'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1519 弄'
+  //       }, {
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         address: '上海市普陀区金沙江路 1516 弄'
+  //       }]
+  //     }
+  //   },
+  //   methods: {
+  //     handleEdit(index, row) {
+  //       console.log(index, row);
+  //     },
+  //     handleDelete(index, row) {
+  //       console.log(index, row);
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -1567,7 +1568,7 @@
 :::demo 通过设置 type="expand" 和 `Scoped slot` 可以开启展开行功能，`el-form-table-column` 的模板会被渲染成为展开行的内容，展开行可访问的属性与使用自定义列模板时的 `Scoped slot` 相同。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData5"
     style="width: 100%">
     <el-form-table-column type="expand">
@@ -1609,7 +1610,7 @@
       label="描述"
       prop="desc">
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <style>
@@ -1628,45 +1629,45 @@
 </style>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData5: [{
-          id: '12987122',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }, {
-          id: '12987123',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }, {
-          id: '12987125',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }, {
-          id: '12987126',
-          name: '好滋好味鸡蛋仔',
-          category: '江浙小吃、小吃零食',
-          desc: '荷兰优质淡奶，奶香浓而不腻',
-          address: '上海市普陀区真北路',
-          shop: '王小虎夫妻店',
-          shopId: '10333'
-        }]
-      }
-    }
-  }
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData5: [{
+  //         id: '12987122',
+  //         name: '好滋好味鸡蛋仔',
+  //         category: '江浙小吃、小吃零食',
+  //         desc: '荷兰优质淡奶，奶香浓而不腻',
+  //         address: '上海市普陀区真北路',
+  //         shop: '王小虎夫妻店',
+  //         shopId: '10333'
+  //       }, {
+  //         id: '12987123',
+  //         name: '好滋好味鸡蛋仔',
+  //         category: '江浙小吃、小吃零食',
+  //         desc: '荷兰优质淡奶，奶香浓而不腻',
+  //         address: '上海市普陀区真北路',
+  //         shop: '王小虎夫妻店',
+  //         shopId: '10333'
+  //       }, {
+  //         id: '12987125',
+  //         name: '好滋好味鸡蛋仔',
+  //         category: '江浙小吃、小吃零食',
+  //         desc: '荷兰优质淡奶，奶香浓而不腻',
+  //         address: '上海市普陀区真北路',
+  //         shop: '王小虎夫妻店',
+  //         shopId: '10333'
+  //       }, {
+  //         id: '12987126',
+  //         name: '好滋好味鸡蛋仔',
+  //         category: '江浙小吃、小吃零食',
+  //         desc: '荷兰优质淡奶，奶香浓而不腻',
+  //         address: '上海市普陀区真北路',
+  //         shop: '王小虎夫妻店',
+  //         shopId: '10333'
+  //       }]
+  //     }
+  //   }
+  // }
 </script>
 ```
 :::
@@ -1677,7 +1678,7 @@
 :::demo 将`show-summary`设置为`true`就会在表格尾部展示合计行。默认情况下，对于合计行，第一列不进行数据求合操作，而是显示「合计」二字（可通过`sum-text`配置），其余列会将本列所有数值进行求合操作，并显示出来。当然，你也可以定义自己的合计逻辑。使用`summary-method`并传入一个方法，返回一个数组，这个数组中的各项就会显示在合计行的各列中，具体可以参考本例中的第二个表格。
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData6"
     border
     show-summary
@@ -1736,75 +1737,75 @@
       prop="amount3"
       label="数值 3（元）">
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData6: [{
-          id: '12987122',
-          name: '王小虎',
-          amount1: '234',
-          amount2: '3.2',
-          amount3: 10
-        }, {
-          id: '12987123',
-          name: '王小虎',
-          amount1: '165',
-          amount2: '4.43',
-          amount3: 12
-        }, {
-          id: '12987124',
-          name: '王小虎',
-          amount1: '324',
-          amount2: '1.9',
-          amount3: 9
-        }, {
-          id: '12987125',
-          name: '王小虎',
-          amount1: '621',
-          amount2: '2.2',
-          amount3: 17
-        }, {
-          id: '12987126',
-          name: '王小虎',
-          amount1: '539',
-          amount2: '4.1',
-          amount3: 15
-        }]
-      };
-    },
-    methods: {
-      getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '总价';
-            return;
-          }
-          const values = data.map(item => Number(item[column.property]));
-          if (!values.every(value => isNaN(value))) {
-            sums[index] = values.reduce((prev, curr) => {
-              const value = Number(curr);
-              if (!isNaN(value)) {
-                return prev + curr;
-              } else {
-                return prev;
-              }
-            }, 0);
-            sums[index] += ' 元';
-          } else {
-            sums[index] = 'N/A';
-          }
-        });
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData6: [{
+  //         id: '12987122',
+  //         name: '王小虎',
+  //         amount1: '234',
+  //         amount2: '3.2',
+  //         amount3: 10
+  //       }, {
+  //         id: '12987123',
+  //         name: '王小虎',
+  //         amount1: '165',
+  //         amount2: '4.43',
+  //         amount3: 12
+  //       }, {
+  //         id: '12987124',
+  //         name: '王小虎',
+  //         amount1: '324',
+  //         amount2: '1.9',
+  //         amount3: 9
+  //       }, {
+  //         id: '12987125',
+  //         name: '王小虎',
+  //         amount1: '621',
+  //         amount2: '2.2',
+  //         amount3: 17
+  //       }, {
+  //         id: '12987126',
+  //         name: '王小虎',
+  //         amount1: '539',
+  //         amount2: '4.1',
+  //         amount3: 15
+  //       }]
+  //     };
+  //   },
+  //   methods: {
+  //     getSummaries(param) {
+  //       const { columns, data } = param;
+  //       const sums = [];
+  //       columns.forEach((column, index) => {
+  //         if (index === 0) {
+  //           sums[index] = '总价';
+  //           return;
+  //         }
+  //         const values = data.map(item => Number(item[column.property]));
+  //         if (!values.every(value => isNaN(value))) {
+  //           sums[index] = values.reduce((prev, curr) => {
+  //             const value = Number(curr);
+  //             if (!isNaN(value)) {
+  //               return prev + curr;
+  //             } else {
+  //               return prev;
+  //             }
+  //           }, 0);
+  //           sums[index] += ' 元';
+  //         } else {
+  //           sums[index] = 'N/A';
+  //         }
+  //       });
 
-        return sums;
-      }
-    }
-  };
+  //       return sums;
+  //     }
+  //   }
+  // };
 </script>
 ```
 :::
@@ -1816,7 +1817,7 @@
 
 ```html
 <template>
-  <div>
+  <!-- <div>
     <el-form-table
       :data="tableData6"
       :span-method="arraySpanMethod"
@@ -1875,74 +1876,74 @@
         label="数值 3（元）">
       </el-form-table-column>
     </el-form-table>
-  </div>
+  </div> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData6: [{
-          id: '12987122',
-          name: '王小虎',
-          amount1: '234',
-          amount2: '3.2',
-          amount3: 10
-        }, {
-          id: '12987123',
-          name: '王小虎',
-          amount1: '165',
-          amount2: '4.43',
-          amount3: 12
-        }, {
-          id: '12987124',
-          name: '王小虎',
-          amount1: '324',
-          amount2: '1.9',
-          amount3: 9
-        }, {
-          id: '12987125',
-          name: '王小虎',
-          amount1: '621',
-          amount2: '2.2',
-          amount3: 17
-        }, {
-          id: '12987126',
-          name: '王小虎',
-          amount1: '539',
-          amount2: '4.1',
-          amount3: 15
-        }]
-      };
-    },
-    methods: {
-      arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (rowIndex % 2 === 0) {
-          if (columnIndex === 0) {
-            return [1, 2];
-          } else if (columnIndex === 1) {
-            return [0, 0];
-          }
-        }
-      },
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData6: [{
+  //         id: '12987122',
+  //         name: '王小虎',
+  //         amount1: '234',
+  //         amount2: '3.2',
+  //         amount3: 10
+  //       }, {
+  //         id: '12987123',
+  //         name: '王小虎',
+  //         amount1: '165',
+  //         amount2: '4.43',
+  //         amount3: 12
+  //       }, {
+  //         id: '12987124',
+  //         name: '王小虎',
+  //         amount1: '324',
+  //         amount2: '1.9',
+  //         amount3: 9
+  //       }, {
+  //         id: '12987125',
+  //         name: '王小虎',
+  //         amount1: '621',
+  //         amount2: '2.2',
+  //         amount3: 17
+  //       }, {
+  //         id: '12987126',
+  //         name: '王小虎',
+  //         amount1: '539',
+  //         amount2: '4.1',
+  //         amount3: 15
+  //       }]
+  //     };
+  //   },
+  //   methods: {
+  //     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
+  //       if (rowIndex % 2 === 0) {
+  //         if (columnIndex === 0) {
+  //           return [1, 2];
+  //         } else if (columnIndex === 1) {
+  //           return [0, 0];
+  //         }
+  //       }
+  //     },
 
-      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (columnIndex === 0) {
-          if (rowIndex % 2 === 0) {
-            return {
-              rowspan: 2,
-              colspan: 1
-            };
-          } else {
-            return {
-              rowspan: 0,
-              colspan: 0
-            };
-          }
-        }
-      }
-    }
-  };
+  //     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+  //       if (columnIndex === 0) {
+  //         if (rowIndex % 2 === 0) {
+  //           return {
+  //             rowspan: 2,
+  //             colspan: 1
+  //           };
+  //         } else {
+  //           return {
+  //             rowspan: 0,
+  //             colspan: 0
+  //           };
+  //         }
+  //       }
+  //     }
+  //   }
+  // };
 </script>
 ```
 :::
@@ -1954,7 +1955,7 @@
 
 ```html
 <template>
-  <el-form-table
+  <!-- <el-form-table
     :data="tableData"
     style="width: 100%">
     <el-form-table-column
@@ -1975,54 +1976,54 @@
       prop="address"
       label="地址">
     </el-form-table-column>
-  </el-form-table>
+  </el-form-table> -->
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        tableData: [{
-          date: '2016-05-03',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333,
-          tag: '家'
-        }, {
-          date: '2016-05-02',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333,
-          tag: '公司'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333,
-          tag: '家'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          province: '上海',
-          city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
-          zip: 200333,
-          tag: '公司'
-        }],
-      }
-    },
-    methods: {
-      indexMethod(index) {
-        return index * 2;
-      }
-    }
-  };
+  // export default {
+  //   data() {
+  //     return {
+  //       tableData: [{
+  //         date: '2016-05-03',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333,
+  //         tag: '家'
+  //       }, {
+  //         date: '2016-05-02',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333,
+  //         tag: '公司'
+  //       }, {
+  //         date: '2016-05-04',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333,
+  //         tag: '家'
+  //       }, {
+  //         date: '2016-05-01',
+  //         name: '王小虎',
+  //         province: '上海',
+  //         city: '普陀区',
+  //         address: '上海市普陀区金沙江路 1518 弄',
+  //         zip: 200333,
+  //         tag: '公司'
+  //       }],
+  //     }
+  //   },
+  //   methods: {
+  //     indexMethod(index) {
+  //       return index * 2;
+  //     }
+  //   }
+  // };
 </script>
 ```
 :::
@@ -2107,6 +2108,16 @@
 | append | 插入至表格最后一行之后的内容，如果需要对表格的内容进行无限滚动操作，可能需要用到这个 slot。若表格有合计行，该 slot 会位于合计行之上。 |
 
 ### Form-table-column Attributes
+
+* **扩展属性**
+
+| 参数      | 说明          | 类型      | 可选值                           | 默认值  |
+|---------- |-------------- |---------- |--------------------------------  |-------- |
+| type | 对应列的类型。如果设置了 `input` 则可以使用`template`标签嵌套任意输入组件，实现验证禁用等功能。 | string | input | — |
+
+
+* **继承属性**
+
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
 | type | 对应列的类型。如果设置了 `selection` 则显示多选框；如果设置了 `index` 则显示该行的索引（从 1 开始计算）；如果设置了 `expand` 则显示为一个可展开的按钮 | string | selection/index/expand | — |

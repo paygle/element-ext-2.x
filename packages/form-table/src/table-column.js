@@ -2,7 +2,6 @@ import ElCheckbox from 'element-ui/packages/checkbox';
 import ElTag from 'element-ui/packages/tag';
 import objectAssign from 'element-ui/src/utils/merge';
 import { getPropByPath } from 'element-ui/src/utils/util';
-import ElTableItem from './table-item'; // 扩展
 
 let columnIdSeed = 1;
 
@@ -218,7 +217,6 @@ export default {
   },
 
   components: {
-    ElTableItem,
     ElCheckbox,
     ElTag
   },
@@ -326,8 +324,11 @@ export default {
       let isTooltip = _self.showOverflowTooltip || _self.showTooltipWhenOverflow;
       let isDisable = getDisabledVal(row, column, store, $index);
       let stopValidate = store.getValidateField(`row${$index + column.property}`);
+      data.ctrls = {}; // 添加 控制字段对象
+      data.tabrow = store.states._tabidxs[store.states.data.indexOf(row)] || {}; // tabrow.字段名 获取 tabindex
+
       if (column.property) {
-        // 自定义禁用和验证字段设置, 在外部 <template/> 中使用
+        // ctrls、tabrow、自定义禁用和验证字段设置, 在外部 <template/> 中使用
         let disabled = store.states.disabledMap[`disabled${$index + column.property}`];
         let validate = store.getValidateField(`validate${$index + column.property}`);
         if (typeof disabled !== 'undefined') data.ctrls[`disabled${$index + column.property}`] = disabled;
@@ -344,7 +345,7 @@ export default {
         </div>
         : <el-table-item
           prop={ data }
-          rules={ store.table.rules }
+          ruler={ store.table.rules }
           property={ `row${$index + column.property}` }
           class={ `row${$index + column.property}` }
           value={row[column.property]}>

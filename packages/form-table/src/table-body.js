@@ -4,6 +4,7 @@ import ElCheckbox from 'element-ui/packages/checkbox';
 import ElTooltip from 'element-ui/packages/tooltip';
 import debounce from 'throttle-debounce/debounce';
 import LayoutObserver from './layout-observer';
+import ElTableItem from './table-item'; // 扩展
 
 export default {
   name: 'ElTableBody',
@@ -12,7 +13,8 @@ export default {
 
   components: {
     ElCheckbox,
-    ElTooltip
+    ElTooltip,
+    ElTableItem
   },
 
   props: {

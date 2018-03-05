@@ -5,3 +5,21 @@
 @import "common/var";
 
 // 自定义扩展组件 form-table 样式
+
+.wrap-table {
+
+  .total-err {
+    color: red;
+    font-size: 14px;
+    line-height: 24px;
+  }
+
+}
+
+.el-form-table {
+
+  .el-form-item {
+    margin: 0;
+    padding: 0 5px;
+  }
+}
