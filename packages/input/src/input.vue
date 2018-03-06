@@ -28,6 +28,8 @@
         :autocomplete="autoComplete"
         :value="currentValue"
         ref="input"
+        @mouseover="inputMouseover"
+        @mouseout="inputMouseout"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
@@ -268,6 +270,7 @@
         if (this.validateEvent) {
           this.dispatch('ElFormItem', 'el.form.change', [value]);
         }
+        this.dispatch('ElFormItem', 'el.form.messagetips', [this.currentValue]); //ext-> 弹出提示
       },
       calcIconOffset(place) {
         const pendantMap = {
@@ -287,6 +290,14 @@
         this.$emit('clear');
         this.setCurrentValue('');
         this.focus();
+      },
+      // ext-> 鼠标over时事件
+      inputMouseover(e) {
+        this.dispatch('ElFormItem', 'el.form.mouseover', [e]);
+      },
+      // ext-> 鼠标out时事件
+      inputMouseout(e) {
+        this.dispatch('ElFormItem', 'el.form.mouseout', [e]);
       }
     },
 
@@ -300,6 +311,9 @@
         this.prefixOffset = this.calcIconOffset('pre');
         this.suffixOffset = this.calcIconOffset('suf');
       }
+      this.$nextTick(_=>{
+        this.dispatch('ElFormItem', 'el.form.messagetips', [this.value]); //ext-> 弹出提示
+      })
     }
   };
 </script>

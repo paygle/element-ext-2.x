@@ -33,8 +33,8 @@
 <script>
   import AsyncValidator from 'async-validator';
   import emitter from 'element-ui/src/mixins/emitter';
-  // import objectAssign from 'element-ui/src/utils/merge';
-  import { noop, TypeOf, compatDateStr } from 'element-ui/src/utils/util';
+  import { createDomElement } from 'element-ui/src/utils/dom';
+  import { noop, typeOf, compatDateStr } from 'element-ui/src/utils/util';
 
   export default {
     name: 'ElTableItem',
@@ -52,8 +52,6 @@
     inject: ['elForm'],
 
     props: {
-      // label: String,
-      // labelWidth: String,
       value: {},
       prop: Object, // 包含 { $index, row, column, store, _self }
       property: String,
@@ -62,17 +60,6 @@
         default: undefined
       },
       ruler: Object, // 表格表单规则集
-      // error: String,
-      // validateStatus: String,
-      // for: String,
-      // inlineMessage: {
-      //   type: [String, Boolean],
-      //   default: ''
-      // },
-      // showMessage: {
-      //   type: Boolean,
-      //   default: true
-      // },
       size: String
     },
     watch: {
@@ -91,42 +78,6 @@
       rules() {
         return this.ruler ? this.ruler[this.prop.column.property] : undefined; // 获取当前属性的校验规则
       },
-      // labelFor() {
-      //   return this.for || this.prop;
-      // },
-      // labelStyle() {
-      //   const ret = {};
-      //   if (this.form.labelPosition === 'top') return ret;
-      //   const labelWidth = this.labelWidth || this.form.labelWidth;
-      //   if (labelWidth) {
-      //     ret.width = labelWidth;
-      //   }
-      //   return ret;
-      // },
-      // contentStyle() {
-      //   const ret = {};
-      //   const label = this.label;
-      //   if (this.form.labelPosition === 'top' || this.form.inline) return ret;
-      //   if (!label && !this.labelWidth && this.isNested) return ret;
-      //   const labelWidth = this.labelWidth || this.form.labelWidth;
-      //   if (labelWidth) {
-      //     ret.marginLeft = labelWidth;
-      //   }
-      //   return ret;
-      // },
-      // form() {
-      //   let parent = this.$parent;
-      //   let parentName = parent.$options.componentName;
-      //   while (parentName !== 'ElFormTable') { // 扩展修改
-      //     if (parentName === 'ElTableItem') { // 扩展修改
-      //       this.isNested = true;
-      //     }
-      //     parent = parent.$parent;
-      //     parentName = parent.$options.componentName;
-      //   }
-      //   return parent;
-      // },
-
       isRequired() {
         let rules = this.rules;
         let isRequired = false;
@@ -158,8 +109,12 @@
         validateState: '',
         validateMessage: '',
         validateDisabled: false,
-        validator: {}
-        // isNested: false
+        validator: {},
+        SHOW_POP_TIPS: false,   // 默认禁用 tooltip功能
+        TIP_POP_WIDTH: 0,
+        tipContent: '', // tooltip内容
+        tipTimeHander: null,
+        tipsDom: null,
       };
     },
     methods: {
@@ -168,21 +123,21 @@
 
         let typevalue = '', type, cdate;
 
-        if (TypeOf(rules) === 'Array') {
+        if (typeOf(rules) === 'Array') {
           for (let i = 0; i < rules.length; i++) {
             type = rules[i].type ? rules[i].type : 'string';
-            if (TypeOf(rules[i]) === 'Object' && rules[i]['type'] === 'date' && TypeOf(value) === 'String') {
+            if (typeOf(rules[i]) === 'Object' && rules[i]['type'] === 'date' && typeOf(value) === 'String') {
               cdate = new Date(compatDateStr(value));
             }
           }
-        } else if (TypeOf(rules) === 'Object' && rules.type === 'date' && TypeOf(value) === 'String') {
+        } else if (typeOf(rules) === 'Object' && rules.type === 'date' && typeOf(value) === 'String') {
           type = rules.type ? rules.type : 'string';
           cdate = new Date(compatDateStr(value));
         }
 
-        if (TypeOf(value) === 'Date') {
+        if (typeOf(value) === 'Date') {
           typevalue = value;
-        } else if (TypeOf(cdate) === 'Date' && !isNaN(cdate.getTime())) {
+        } else if (typeOf(cdate) === 'Date' && !isNaN(cdate.getTime())) {
           typevalue = cdate;
         } else {
           typevalue = value;
@@ -215,34 +170,8 @@
       },
 
       validate(trigger, callback = noop) {
+
         this.validateDisabled = false;
-        // const rules = this.getFilteredRule(trigger);
-        // if ((!rules || rules.length === 0) && this.required === undefined) {
-        //   callback();
-        //   return true;
-        // }
-
-        // this.validateState = 'validating';
-
-        // const descriptor = {};
-        // if (rules && rules.length > 0) {
-        //   rules.forEach(rule => {
-        //     delete rule.trigger;
-        //   });
-        // }
-        // descriptor[this.prop] = rules;
-
-        // const validator = new AsyncValidator(descriptor);
-        // const model = {};
-
-        // model[column.property] = this.getTypeOfVal(this.value, rule);
-        // validator.validate(model, { firstFields: true }, (errors, fields) => {
-        //   this.validateState = !errors ? 'success' : 'error';
-        //   this.validateMessage = errors ? errors[0].message : '';
-
-        //   callback(this.validateMessage);
-        // });
-
         // const regxNumber = /^\d*\.?\d*$/g;
         const {$index, row, column, store} = this.prop;
 
@@ -256,7 +185,7 @@
           }
         });
 
-        if (TypeOf(this.value) === 'Array') return; // 类型为数组时不校验
+        if (typeOf(this.value) === 'Array') return; // 类型为数组时不校验
 
         if (this.rules) { // 存在规则才进行校验
           this.validateState = 'validating';
@@ -309,6 +238,85 @@
         }
 
         this.validate('change');
+      },
+      // ext-> 鼠标over时事件
+      inputMouseover(e) {
+        let pos, gapw, style, color = "", that = this;
+        let inputEl = this.$el.querySelector('input');
+        let inputWidth = this.getPlaceWidth(inputEl);
+        that.TIP_POP_WIDTH = this.getTipContentWidth(inputEl, this.tipContent);
+
+        if(that.SHOW_POP_TIPS){
+          that.tipTimeHander = setTimeout(()=>{
+            pos = inputEl.getBoundingClientRect();
+            gapw = that.TIP_POP_WIDTH > 0 ? (that.TIP_POP_WIDTH - inputWidth)/2 : 0;
+
+            style = `color:${color}; left:${pos.left - gapw}px; top: ${pos.top - 38}px; z-index: 99; position: fixed`;
+
+            if(/[\w\W]{3,}/ig.test(that.tipContent)){
+              that.tipsDom = createDomElement('div', {class:"form-message-tips", style: style});
+              that.tipsDom.innerHTML = that.tipContent;
+              document.body.appendChild(that.tipsDom);
+            }
+          }, 300);
+        }
+      },
+      // ext-> 鼠标out时事件
+      inputMouseout(e) {
+        clearTimeout(this.tipTimeHander);
+        let delDoms = document.querySelectorAll('.form-message-tips');
+        if(delDoms.length && this.tipsDom) {
+          for(let i=0; i<delDoms.length; i++){
+            document.body.removeChild(delDoms[i]);
+          }
+          this.tipsDom = null;
+        }
+      },
+      // ext-> 设置提示内容
+      setTipContent(value){
+        this.$nextTick(function(){
+          if(!this.tipDisabled){
+            this.tipContent = value ? String(value) : '';
+            this.SHOW_POP_TIPS = this.getTipStatus(this.$el.querySelector('input'));
+          }
+        });
+      },
+      // 计算组件除padding的宽度
+      getPlaceWidth(el){
+        let elStyl, paddingLeft, paddingRight;
+        if(el) {
+          elStyl = getComputedStyle(el);
+          paddingLeft =  parseInt(elStyl.paddingLeft.replace('px',''), 10);
+          paddingRight =  parseInt(elStyl.paddingRight.replace('px',''), 10);
+          return el.getBoundingClientRect().width - paddingLeft - paddingRight;
+        }else{
+          return 0;
+        }
+      },
+      // 计算文本宽度
+      getTipContentWidth(el, text){
+        let elStyl, fontSize,  zhword, zhWidth;
+        text = text || '';
+        elStyl = getComputedStyle(el);
+        fontSize = parseInt(elStyl.fontSize.replace('px',''), 10);
+        zhword = String(text).replace(/[0-9A-Za-z\-\:]/ig, '');
+        zhWidth = zhword.length * fontSize;
+        return (String(text).length - zhword.length) * fontSize * 0.5 + zhWidth;
+      },
+      // 获取tip动态配置
+      getTipStatus(el){
+        let width, contentWidth;
+        if(el){
+          width = this.getPlaceWidth(el);
+          contentWidth = this.getTipContentWidth(el, this.tipContent);
+          if(contentWidth > width){
+            return true;
+          }else{
+            return false;
+          }
+        }else{
+          return false;
+        }
       }
     },
     mounted() {
@@ -327,6 +335,9 @@
         if (this.rules && this.rules.length || this.isRequired) {
           this.$on('el.form.blur', this.onFieldBlur);
           this.$on('el.form.change', this.onFieldChange);
+          this.$on('el.form.mouseover', this.inputMouseover); // 表单组件 mouseover 事件
+          this.$on('el.form.mouseout', this.inputMouseout); // 表单组件 mouseout 事件
+          this.$on('el.form.messagetips', this.setTipContent); // 弹出信息内容填充
         }
       }
     },
