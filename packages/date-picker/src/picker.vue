@@ -352,7 +352,8 @@ export default {
       default: '-'
     },
     pickerOptions: {},
-    unlinkPanels: Boolean
+    unlinkPanels: Boolean,
+    disabledTips: Boolean // ext-> 禁用表单弹窗提示
   },
 
   components: { ElInput },
@@ -502,6 +503,7 @@ export default {
       gpuAcceleration: false
     };
     this.placement = PLACEMENT_MAP[this.align] || PLACEMENT_MAP.left;
+    this.setMessageTips(); //ext-> 信息超出边界弹出提示
   },
 
   methods: {
@@ -809,6 +811,7 @@ export default {
         this.dispatch('ElFormItem', 'el.form.change', val);
         this.valueOnOpen = val;
       }
+      this.setMessageTips(); //ext-> 信息超出边界弹出提示
     },
 
     emitInput(val) {
@@ -826,6 +829,15 @@ export default {
         return value && this.picker.isValidValue(value);
       } else {
         return true;
+      }
+    },
+
+    // ext-> 信息超出边界弹出提示
+    setMessageTips() {
+      if (!this.disabledTips && typeof this.displayValue === 'string') {
+        this.$nextTick(() => {
+          this.dispatch('ElFormItem', 'el.form.messagetips', [this.displayValue]);
+        })
       }
     }
   }

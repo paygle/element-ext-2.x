@@ -176,17 +176,22 @@ export const getFloatNumber = (precision, value, roundoff) => { // 自定义 flo
 
 function mixFields(arr, fo, op) {
   if (arr.length) {
-    return arr.map((item)=>{
+    let marknew = [];
+    let opdata = arr.map((item) => {
       let nf = JSON.parse(JSON.stringify(fo));
-      Object.keys(nf).forEach((f)=>{
+      marknew.push({});
+      Object.keys(nf).forEach((f) => {
         if (op === 'add') {
           item[f] = nf[f];
         } else if (op === 'del') {
           delete item[f];
+        } else if (op === 'mark' && item.hasOwnProperty(f)) {
+          marknew[marknew.length - 1][f] = item[f];
         }
       });
       return item;
     });
+    return op === 'mark' ? marknew : opdata;
   }
   return arr;
 }
@@ -212,8 +217,9 @@ function mixFieldInArray(arr, field, op) {
  * 格式： 'fieldname'  添加单个字段到数组
  * @param { Object | String | Array } field
  */
-export const arrayFieldsAdd = (arr, field) => mixFieldInArray(arr, field, 'add');
-export const arrayFieldsdel = (arr, field) => mixFieldInArray(arr, field, 'del');
+export const arrayFieldsAdd = (arr, field) => mixFieldInArray(arr, field, 'add'); // 添加
+export const arrayFieldsdel = (arr, field) => mixFieldInArray(arr, field, 'del'); // 删除
+export const arrayMarkNew = (arr, field) => mixFieldInArray(arr, field, 'mark'); // 选取
 
 /**
  * @param { Object, String } el   对象选择符或结点对象

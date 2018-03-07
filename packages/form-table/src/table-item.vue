@@ -9,25 +9,6 @@
     sizeClass ? 'el-form-item--' + sizeClass : ''
   ]">
     <slot></slot>
-    <!-- <label :for="labelFor" class="el-form-item__label" v-bind:style="labelStyle" v-if="label || $slots.label">
-      <slot name="label">{{label + form.labelSuffix}}</slot>
-    </label>
-    <div class="el-form-item__content" v-bind:style="contentStyle">
-      <slot></slot>
-      <transition name="el-zoom-in-top">
-        <div
-          v-if="validateState === 'error' && showMessage && form.showMessage"
-          class="el-form-item__error"
-          :class="{
-            'el-form-item__error--inline': typeof inlineMessage === 'boolean'
-              ? inlineMessage
-              : (elForm && elForm.inlineMessage || false)
-          }"
-        >
-          {{validateMessage}}
-        </div>
-      </transition>
-    </div> -->
   </div>
 </template>
 <script>
@@ -37,7 +18,7 @@
   import { noop, typeOf, compatDateStr } from 'element-ui/src/utils/util';
 
   export default {
-    name: 'ElTableItem',
+    // name: 'ElTableItem',
 
     componentName: 'ElFormItem',
 
@@ -60,20 +41,10 @@
         default: undefined
       },
       ruler: Object, // 表格表单规则集
+      disabledTips: Boolean, // 禁用表单弹窗提示
       size: String
     },
-    watch: {
-      // error: {
-      //   immediate: true,
-      //   handler(value) {
-      //     this.validateMessage = value;
-      //     this.validateState = value ? 'error' : '';
-      //   }
-      // },
-      // validateStatus(value) {
-      //   this.validateState = value;
-      // }
-    },
+
     computed: {
       rules() {
         return this.ruler ? this.ruler[this.prop.column.property] : undefined; // 获取当前属性的校验规则
@@ -110,11 +81,11 @@
         validateMessage: '',
         validateDisabled: false,
         validator: {},
-        SHOW_POP_TIPS: false,   // 默认禁用 tooltip功能
+        IS_SHOW_TIPS: false, // 默认禁用 tooltip功能
         TIP_POP_WIDTH: 0,
         tipContent: '', // tooltip内容
         tipTimeHander: null,
-        tipsDom: null,
+        tipsDom: null
       };
     },
     methods: {
@@ -186,7 +157,6 @@
         });
 
         if (typeOf(this.value) === 'Array') return; // 类型为数组时不校验
-
         if (this.rules) { // 存在规则才进行校验
           this.validateState = 'validating';
           let descriptor = {}, model = {};
@@ -206,6 +176,7 @@
             store.commit('disErrCount', `row${$index + column.property}`);
           } else {
             store.commit('setErrCount', `row${$index + column.property}`);
+            this.tipContent = this.validateMessage; // 设置错误信息
           }
         }
         this.dispatch('ElFormTable', 'err-change');
@@ -241,20 +212,21 @@
       },
       // ext-> 鼠标over时事件
       inputMouseover(e) {
-        let pos, gapw, style, color = "", that = this;
+        let pos, gapw, style, color = '', that = this;
         let inputEl = this.$el.querySelector('input');
         let inputWidth = this.getPlaceWidth(inputEl);
-        that.TIP_POP_WIDTH = this.getTipContentWidth(inputEl, this.tipContent);
+        this.TIP_POP_WIDTH = this.getTipContentWidth(inputEl, this.tipContent);
 
-        if(that.SHOW_POP_TIPS){
-          that.tipTimeHander = setTimeout(()=>{
+        if (this.disabledTips) return; // 禁用表单弹窗提示则返回
+        if (this.IS_SHOW_TIPS || this.validateState === 'error') {
+          this.tipTimeHander = setTimeout(() => {
             pos = inputEl.getBoundingClientRect();
-            gapw = that.TIP_POP_WIDTH > 0 ? (that.TIP_POP_WIDTH - inputWidth)/2 : 0;
-
+            gapw = that.TIP_POP_WIDTH > 0 ? (that.TIP_POP_WIDTH - inputWidth) / 2 : 0;
+            if (this.validateState === 'error') color = 'red';
             style = `color:${color}; left:${pos.left - gapw}px; top: ${pos.top - 38}px; z-index: 99; position: fixed`;
 
-            if(/[\w\W]{3,}/ig.test(that.tipContent)){
-              that.tipsDom = createDomElement('div', {class:"form-message-tips", style: style});
+            if (/[\w\W]{3,}/ig.test(that.tipContent)) {
+              that.tipsDom = createDomElement('div', {class: 'form-message-tips', style: style});
               that.tipsDom.innerHTML = that.tipContent;
               document.body.appendChild(that.tipsDom);
             }
@@ -265,56 +237,48 @@
       inputMouseout(e) {
         clearTimeout(this.tipTimeHander);
         let delDoms = document.querySelectorAll('.form-message-tips');
-        if(delDoms.length && this.tipsDom) {
-          for(let i=0; i<delDoms.length; i++){
-            document.body.removeChild(delDoms[i]);
-          }
+        if (delDoms.length && this.tipsDom) {
+          for (let i = 0; i < delDoms.length; i++) { document.body.removeChild(delDoms[i]); }
           this.tipsDom = null;
         }
       },
-      // ext-> 设置提示内容
-      setTipContent(value){
-        this.$nextTick(function(){
-          if(!this.tipDisabled){
-            this.tipContent = value ? String(value) : '';
-            this.SHOW_POP_TIPS = this.getTipStatus(this.$el.querySelector('input'));
-          }
-        });
+      // ext-> 设置超出边界提示内容
+      setTipContent(value) {
+        if (this.validateState !== 'error') {
+          this.tipContent = value ? String(value) : '';
+          this.IS_SHOW_TIPS = this.getTipStatus(this.$el.querySelector('input'));
+        }
       },
       // 计算组件除padding的宽度
-      getPlaceWidth(el){
+      getPlaceWidth(el) {
         let elStyl, paddingLeft, paddingRight;
-        if(el) {
+        if (el) {
           elStyl = getComputedStyle(el);
-          paddingLeft =  parseInt(elStyl.paddingLeft.replace('px',''), 10);
-          paddingRight =  parseInt(elStyl.paddingRight.replace('px',''), 10);
+          paddingLeft = parseInt(elStyl.paddingLeft.replace('px', ''), 10);
+          paddingRight = parseInt(elStyl.paddingRight.replace('px', ''), 10);
           return el.getBoundingClientRect().width - paddingLeft - paddingRight;
-        }else{
+        } else {
           return 0;
         }
       },
       // 计算文本宽度
-      getTipContentWidth(el, text){
-        let elStyl, fontSize,  zhword, zhWidth;
+      getTipContentWidth(el, text) {
+        let elStyl, fontSize, zhword, zhWidth;
         text = text || '';
         elStyl = getComputedStyle(el);
-        fontSize = parseInt(elStyl.fontSize.replace('px',''), 10);
+        fontSize = parseInt(elStyl.fontSize.replace('px', ''), 10);
         zhword = String(text).replace(/[0-9A-Za-z\-\:]/ig, '');
         zhWidth = zhword.length * fontSize;
         return (String(text).length - zhword.length) * fontSize * 0.5 + zhWidth;
       },
       // 获取tip动态配置
-      getTipStatus(el){
+      getTipStatus(el) {
         let width, contentWidth;
-        if(el){
+        if (el) {
           width = this.getPlaceWidth(el);
           contentWidth = this.getTipContentWidth(el, this.tipContent);
-          if(contentWidth > width){
-            return true;
-          }else{
-            return false;
-          }
-        }else{
+          if (contentWidth > width) { return true; } else { return false; }
+        } else {
           return false;
         }
       }

@@ -166,7 +166,8 @@
         type: Boolean,
         default: false
       },
-      tabindex: String
+      tabindex: String,
+      disabledTips: Boolean // ext-> 禁用表单弹窗提示
     },
 
     computed: {
@@ -230,6 +231,7 @@
         if (this.validateEvent) {
           this.dispatch('ElFormItem', 'el.form.blur', [this.currentValue]);
         }
+        this.setMessageTips(); // ext-> 信息超出边界弹出提示
       },
       inputSelect() {
         (this.$refs.input || this.$refs.textarea).select();
@@ -270,7 +272,6 @@
         if (this.validateEvent) {
           this.dispatch('ElFormItem', 'el.form.change', [value]);
         }
-        this.dispatch('ElFormItem', 'el.form.messagetips', [this.currentValue]); //ext-> 弹出提示
       },
       calcIconOffset(place) {
         const pendantMap = {
@@ -291,13 +292,25 @@
         this.setCurrentValue('');
         this.focus();
       },
+      // ext-> 信息超出边界弹出提示
+      setMessageTips() {
+        if (!this.disabledTips && this.type !== 'textarea') {
+          this.$nextTick(()=>{
+            this.dispatch('ElFormItem', 'el.form.messagetips', [this.value]);
+          });
+        }
+      },
       // ext-> 鼠标over时事件
       inputMouseover(e) {
-        this.dispatch('ElFormItem', 'el.form.mouseover', [e]);
+        if (!this.disabledTips) {
+          this.dispatch('ElFormItem', 'el.form.mouseover', [e]);
+        }
       },
       // ext-> 鼠标out时事件
       inputMouseout(e) {
-        this.dispatch('ElFormItem', 'el.form.mouseout', [e]);
+        if (!this.disabledTips) {
+          this.dispatch('ElFormItem', 'el.form.mouseout', [e]);
+        }
       }
     },
 
@@ -311,9 +324,7 @@
         this.prefixOffset = this.calcIconOffset('pre');
         this.suffixOffset = this.calcIconOffset('suf');
       }
-      this.$nextTick(_=>{
-        this.dispatch('ElFormItem', 'el.form.messagetips', [this.value]); //ext-> 弹出提示
-      })
+      this.setMessageTips(); // ext-> 信息超出边界弹出提示
     }
   };
 </script>

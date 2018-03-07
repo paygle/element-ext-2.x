@@ -282,7 +282,8 @@
       popperAppendToBody: {
         type: Boolean,
         default: true
-      }
+      },
+      disabledTips: Boolean // ext-> 禁用表单弹窗提示
     },
 
     data() {
@@ -471,6 +472,7 @@
         if (!valueEquals(this.value, val)) {
           this.$emit('change', val);
           this.dispatch('ElFormItem', 'el.form.change', val);
+          this.setMessageTips(); // ext-> 信息超出边界弹出提示
         }
       },
 
@@ -771,6 +773,14 @@
         } else {
           return getValueByPath(item.value, this.valueKey);
         }
+      },
+      // ext-> 信息超出边界弹出提示
+      setMessageTips() {
+        if (!this.disabledTips && !this.multiple) {
+          this.$nextTick(()=>{
+            this.dispatch('ElFormItem', 'el.form.messagetips', [this.selectedLabel]);
+          });
+        }
       }
     },
 
@@ -805,6 +815,7 @@
         }
       });
       this.setSelected();
+      this.setMessageTips(); // ext-> 信息超出边界弹出提示
     },
 
     beforeDestroy() {

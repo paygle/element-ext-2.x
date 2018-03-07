@@ -200,7 +200,8 @@ export default {
       type: Boolean,
       default: true
     },
-    index: [Number, Function]
+    index: [Number, Function],
+    disabledTips: Boolean // ext-> 禁用表单弹窗提示
   },
 
   data() {
@@ -286,7 +287,8 @@ export default {
       filterOpened: false,
       filteredValue: this.filteredValue || [],
       filterPlacement: this.filterPlacement || '',
-      index: this.index
+      index: this.index,
+      disabledTips: this.disabledTips // ext-> 禁用表单弹窗提示
     });
 
     objectAssign(column, forced[type] || {});
@@ -345,6 +347,7 @@ export default {
         </div>
         : <el-table-item
           prop={ data }
+          disabled-tips={ _self.disabledTips }
           ruler={ store.table.rules }
           property={ `row${$index + column.property}` }
           class={ `row${$index + column.property}` }

@@ -5,7 +5,7 @@
         rules: {
           name: [
             { required: true, message: '请输入活动名称', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            { min: 3, max: 25, message: '长度在 3 到 5 个字符', trigger: 'blur' }
           ],
           zip: [
             { required: true, message: '请选择活动区域', trigger: 'change' }
@@ -19,36 +19,36 @@
         },
         tableData: [{
           date: '2016-05-11',
-          name: '王小虎，上海市普陀区金沙江路',
+          name: '王小虎，上海市普陀区金沙江路普陀区',
           province: '上海',
           city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
+          address: 'shanghai',
           zip: 200333,
-          tag: '家'
+          tag: ''
         }, {
           date: '2016-05-02',
           name: '王小虎',
           province: '上海',
           city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
+          address: 'shanghai',
           zip: 200333,
-          tag: '公司'
+          tag: ''
         }, {
           date: '2016-05-04',
-          name: '王小虎',
+          name: '王小虎，上海市普陀区金沙江路普陀区',
           province: '上海',
           city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
+          address: 'shanghai',
           zip: 200333,
-          tag: '家'
+          tag: ''
         }, {
           date: '2016-05-01',
           name: '王小虎',
           province: '上海',
           city: '普陀区',
-          address: '上海市普陀区金沙江路 1518 弄',
+          address: 'shanghai',
           zip: 200333,
-          tag: '公司'
+          tag: ''
         }],
         tableData2: [{
           date: '2016-05-02',
@@ -419,19 +419,35 @@
         prop="name"
         type="input"
         label="姓名"
-        width="180">
+        width="120">
         <template slot-scope="mdl">
           <el-input v-model="mdl.row['name']" @focus="consolelog(mdl)"></el-input>
         </template>
       </el-form-table-column>
       <el-form-table-column
+        type="input"
         prop="date"
         label="日期"
-        width="180">
+        width="120">
+        <template slot-scope="mdl">
+          <el-date-picker
+            type="date"
+            placeholder="选择日期"
+            v-model="mdl.row['date']"
+            style="width: 100%;">
+          </el-date-picker>
+        </template>
       </el-form-table-column>
       <el-form-table-column
+        type="input"
         prop="address"
-        label="地址">
+        label="区域">
+        <template slot-scope="mdl">
+          <el-select v-model="mdl.row['address']" placeholder="请选择活动区域">
+            <el-option label="活动区域一" value="shanghai"></el-option>
+            <el-option label="活动区域二,王小上海市普陀区金沙" value="beijing"></el-option>
+          </el-select>
+        </template>
       </el-form-table-column>
     </el-form-table>
   </template>
@@ -2113,7 +2129,7 @@
 
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
-| type | 对应列的类型。如果设置了 `input` 则可以使用`template`标签嵌套任意输入组件，实现验证禁用等功能。（其中`slot-scope="scope"` 的 scope 对象中包括 `$index 行序数， row 行对象， column 列对象， store 数据对象， ctrls 控制字段， tabrow 设置tabindex值`） | string | input | — |
+| type | 对应列的类型。如果设置了 `input` 则可以使用`template`标签嵌套任意输入组件，实现验证禁用等功能。（其中`slot-scope="scope"` 的 scope 对象中包括 `$index 行序数， row 行对象， column 列对象， store 数据对象， ctrls 控制字段， tabrow 设置tabindex值`） | string | input, 警告如果表格内使用了表单组件一定要给定这个(input)类型 | — |
 
 
 * **继承属性**

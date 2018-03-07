@@ -253,7 +253,7 @@
     @include share-rule(border-pseudo) {
       content: '';
       position: absolute;
-      background-color: $--border-color-lighter;
+      background-color: #f5f5f5; /* ext-> modify */
       z-index: 1;
     }
 
