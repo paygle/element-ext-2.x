@@ -503,7 +503,7 @@ export default {
       gpuAcceleration: false
     };
     this.placement = PLACEMENT_MAP[this.align] || PLACEMENT_MAP.left;
-    this.setMessageTips(); //ext-> 信息超出边界弹出提示
+    this.setMessageTips(); // ext-> 信息超出边界弹出提示
   },
 
   methods: {
@@ -811,7 +811,7 @@ export default {
         this.dispatch('ElFormItem', 'el.form.change', val);
         this.valueOnOpen = val;
       }
-      this.setMessageTips(); //ext-> 信息超出边界弹出提示
+      this.setMessageTips(); // ext-> 信息超出边界弹出提示
     },
 
     emitInput(val) {
@@ -837,7 +837,7 @@ export default {
       if (!this.disabledTips && typeof this.displayValue === 'string') {
         this.$nextTick(() => {
           this.dispatch('ElFormItem', 'el.form.messagetips', [this.displayValue]);
-        })
+        });
       }
     }
   }

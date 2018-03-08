@@ -145,7 +145,7 @@
         this.validateDisabled = false;
         // const regxNumber = /^\d*\.?\d*$/g;
         const {$index, row, column, store} = this.prop;
-
+debugger
         // 验证样式设置
         this.$nextTick(()=> {
           let rowIdx, store = this.prop.store;
@@ -299,10 +299,11 @@
         if (this.rules && this.rules.length || this.isRequired) {
           this.$on('el.form.blur', this.onFieldBlur);
           this.$on('el.form.change', this.onFieldChange);
-          this.$on('el.form.mouseover', this.inputMouseover); // 表单组件 mouseover 事件
-          this.$on('el.form.mouseout', this.inputMouseout); // 表单组件 mouseout 事件
-          this.$on('el.form.messagetips', this.setTipContent); // 弹出信息内容填充
         }
+
+        this.$on('el.form.mouseover', this.inputMouseover); // 表单组件 mouseover 事件
+        this.$on('el.form.mouseout', this.inputMouseout); // 表单组件 mouseout 事件
+        this.$on('el.form.messagetips', this.setTipContent); // 弹出信息内容填充
       }
     },
     beforeDestroy() {
