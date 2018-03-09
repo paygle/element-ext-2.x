@@ -86,6 +86,8 @@
       @blur="handleBlur"
       @change="handleChange"
       :aria-label="label"
+      @mouseover="inputMouseover"
+      @mouseout="inputMouseout"
     >
     </textarea>
   </div>

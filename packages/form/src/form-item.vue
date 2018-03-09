@@ -263,7 +263,7 @@
       inputMouseover(e) {
         if (this.form.disabledTips) return; // 禁用表单溢出和验证弹窗提示
         let pos, gapw, style, color = '', that = this;
-        let inputEl = this.$el.querySelector('input');
+        let inputEl = this.$el.querySelector('input') || this.$el.querySelector('textarea');
         let inputWP = this.getPlaceWidth(inputEl);
         this.TIP_POP_WIDTH = this.getTipContentWidth(inputEl, this.tipContent);
 
