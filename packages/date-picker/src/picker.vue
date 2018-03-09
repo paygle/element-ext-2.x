@@ -807,11 +807,11 @@ export default {
     emitChange(val) {
       // determine user real change only
       if (val !== this.valueOnOpen) {
+        this.setMessageTips(); // ext-> 信息超出边界弹出提示
         this.$emit('change', val);
-        this.dispatch('ElFormItem', 'el.form.change', val);
+        this.$nextTick(_=>this.dispatch('ElFormItem', 'el.form.change', val));
         this.valueOnOpen = val;
       }
-      this.setMessageTips(); // ext-> 信息超出边界弹出提示
     },
 
     emitInput(val) {
@@ -835,9 +835,7 @@ export default {
     // ext-> 信息超出边界弹出提示
     setMessageTips() {
       if (!this.disabledTips && typeof this.displayValue === 'string') {
-        this.$nextTick(() => {
-          this.dispatch('ElFormItem', 'el.form.messagetips', [this.displayValue]);
-        });
+        this.dispatch('ElFormItem', 'el.form.messagetips', [this.displayValue]);
       }
     }
   }

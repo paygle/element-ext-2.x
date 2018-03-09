@@ -11,7 +11,7 @@
             { required: true, message: '不能为空', trigger: 'change' }
           ],
           date: [
-            { required: true, type: 'date', message: '请选择日期', trigger: 'change' }
+            { required: true, type: 'date', message: '请选择日期', trigger: 'blur' }
           ],
           address: [
             { required: true, pattern: 'shanghai', min: 3, max: 10, message: '请填写活动形式', trigger: 'blur' }
@@ -2263,6 +2263,7 @@
 
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
+| data | 显示的数据 | array | — | — |
 
 
 * **继承属性**
@@ -2343,6 +2344,7 @@
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
 | type | 对应列的类型。如果设置了 `input` 则可以使用`template`标签嵌套任意输入组件，实现验证禁用等功能。（其中`slot-scope="scope"` 的 scope 对象中包括 `$index 行序数， row 行对象， column 列对象， store 数据对象， ctrls 控制字段， tabrow 设置tabindex值`） | string | input, 警告如果表格内使用了表单组件一定要给定这个(input)类型 | — |
+| disabled-tips | 是否禁用表单溢出和验证弹窗提示 | Boolean | — | false |
 
 
 * **继承属性**

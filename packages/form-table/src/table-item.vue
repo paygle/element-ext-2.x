@@ -64,7 +64,6 @@
         }
         return isRequired;
       },
-
       _formSize() {
         return this.elForm.size;
       },
@@ -145,7 +144,7 @@
         this.validateDisabled = false;
         // const regxNumber = /^\d*\.?\d*$/g;
         const {$index, row, column, store} = this.prop;
-debugger
+
         // 验证样式设置
         this.$nextTick(()=> {
           let rowIdx, store = this.prop.store;
@@ -156,7 +155,6 @@ debugger
           }
         });
 
-        if (typeOf(this.value) === 'Array') return; // 类型为数组时不校验
         if (this.rules) { // 存在规则才进行校验
           this.validateState = 'validating';
           let descriptor = {}, model = {};
@@ -212,16 +210,16 @@ debugger
       },
       // ext-> 鼠标over时事件
       inputMouseover(e) {
+        if (this.disabledTips) return; // 禁用表单溢出和验证弹窗提示
         let pos, gapw, style, color = '', that = this;
         let inputEl = this.$el.querySelector('input');
-        let inputWidth = this.getPlaceWidth(inputEl);
+        let inputWP = this.getPlaceWidth(inputEl);
         this.TIP_POP_WIDTH = this.getTipContentWidth(inputEl, this.tipContent);
 
-        if (this.disabledTips) return; // 禁用表单弹窗提示则返回
         if (this.IS_SHOW_TIPS || this.validateState === 'error') {
           this.tipTimeHander = setTimeout(() => {
             pos = inputEl.getBoundingClientRect();
-            gapw = that.TIP_POP_WIDTH > 0 ? (that.TIP_POP_WIDTH - inputWidth) / 2 : 0;
+            gapw = that.TIP_POP_WIDTH > 0 ? (that.TIP_POP_WIDTH - inputWP.w - inputWP.pl) / 2 : 0;
             if (this.validateState === 'error') color = 'red';
             style = `color:${color}; left:${pos.left - gapw}px; top: ${pos.top - 38}px; z-index: 99; position: fixed`;
 
@@ -235,6 +233,7 @@ debugger
       },
       // ext-> 鼠标out时事件
       inputMouseout(e) {
+        if (this.disabledTips) return; // 禁用表单溢出和验证弹窗提示
         clearTimeout(this.tipTimeHander);
         let delDoms = document.querySelectorAll('.form-message-tips');
         if (delDoms.length && this.tipsDom) {
@@ -256,9 +255,12 @@ debugger
           elStyl = getComputedStyle(el);
           paddingLeft = parseInt(elStyl.paddingLeft.replace('px', ''), 10);
           paddingRight = parseInt(elStyl.paddingRight.replace('px', ''), 10);
-          return el.getBoundingClientRect().width - paddingLeft - paddingRight;
+          return {
+            w: el.getBoundingClientRect().width - paddingLeft - paddingRight,
+            pl: paddingLeft
+          };
         } else {
-          return 0;
+          return {w: 0, pl: 0};
         }
       },
       // 计算文本宽度
@@ -269,13 +271,13 @@ debugger
         fontSize = parseInt(elStyl.fontSize.replace('px', ''), 10);
         zhword = String(text).replace(/[0-9A-Za-z\-\:]/ig, '');
         zhWidth = zhword.length * fontSize;
-        return (String(text).length - zhword.length) * fontSize * 0.5 + zhWidth;
+        return (String(text).length - zhword.length) * fontSize * 0.56 + zhWidth;
       },
       // 获取tip动态配置
       getTipStatus(el) {
         let width, contentWidth;
         if (el) {
-          width = this.getPlaceWidth(el);
+          width = this.getPlaceWidth(el).w;
           contentWidth = this.getTipContentWidth(el, this.tipContent);
           if (contentWidth > width) { return true; } else { return false; }
         } else {

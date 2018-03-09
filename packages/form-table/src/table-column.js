@@ -201,7 +201,7 @@ export default {
       default: true
     },
     index: [Number, Function],
-    disabledTips: Boolean // ext-> 禁用表单弹窗提示
+    disabledTips: Boolean // ext-> 禁用表单溢出和验证弹窗提示
   },
 
   data() {
@@ -288,7 +288,7 @@ export default {
       filteredValue: this.filteredValue || [],
       filterPlacement: this.filterPlacement || '',
       index: this.index,
-      disabledTips: this.disabledTips // ext-> 禁用表单弹窗提示
+      disabledTips: this.disabledTips // ext-> 禁用表单溢出和验证弹窗提示
     });
 
     objectAssign(column, forced[type] || {});

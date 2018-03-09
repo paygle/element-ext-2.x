@@ -39,7 +39,9 @@
       validateOnRuleChange: {
         type: Boolean,
         default: true
-      }
+      },
+      disabledTips: Boolean, // ext-> 禁用表单溢出和验证弹窗提示
+      formPopTips: Boolean   // ext-> 启用表单弹出提示，下方验证提示则不显示
     },
     watch: {
       rules() {

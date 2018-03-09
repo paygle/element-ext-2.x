@@ -15,7 +15,7 @@
       <slot></slot>
       <transition name="el-zoom-in-top">
         <div
-          v-if="validateState === 'error' && showMessage && form.showMessage"
+          v-if="validateState === 'error' && showMessage && form.showMessage && !form.formPopTips"
           class="el-form-item__error"
           :class="{
             'el-form-item__error--inline': typeof inlineMessage === 'boolean'
@@ -34,6 +34,7 @@
   import emitter from 'element-ui/src/mixins/emitter';
   import objectAssign from 'element-ui/src/utils/merge';
   import { noop, getPropByPath } from 'element-ui/src/utils/util';
+  import { createDomElement } from 'element-ui/src/utils/dom'; // 扩展
 
   export default {
     name: 'ElFormItem',
@@ -165,7 +166,12 @@
         validateMessage: '',
         validateDisabled: false,
         validator: {},
-        isNested: false
+        isNested: false,
+        IS_SHOW_TIPS: false, // ext-> 默认禁用 tooltip功能
+        TIP_POP_WIDTH: 0,
+        tipContent: '', // ext-> tooltip内容
+        tipTimeHander: null, // 扩展
+        tipsDom: null // 扩展
       };
     },
     methods: {
@@ -197,6 +203,7 @@
           this.validateMessage = errors ? errors[0].message : '';
 
           callback(this.validateMessage);
+          if (errors) this.tipContent = this.validateMessage; // ext-> 设置错误信息
         });
       },
       clearValidate() {
@@ -251,6 +258,82 @@
         }
 
         this.validate('change');
+      },
+      // ext-> 鼠标over时事件
+      inputMouseover(e) {
+        if (this.form.disabledTips) return; // 禁用表单溢出和验证弹窗提示
+        let pos, gapw, style, color = '', that = this;
+        let inputEl = this.$el.querySelector('input');
+        let inputWP = this.getPlaceWidth(inputEl);
+        this.TIP_POP_WIDTH = this.getTipContentWidth(inputEl, this.tipContent);
+
+        if (this.IS_SHOW_TIPS || this.validateState === 'error') {
+          this.tipTimeHander = setTimeout(() => {
+            pos = inputEl.getBoundingClientRect();
+            gapw = that.TIP_POP_WIDTH > 0 ? (that.TIP_POP_WIDTH - inputWP.w - inputWP.pl) / 2 : 0;
+            if (this.validateState === 'error') color = 'red';
+            style = `color:${color}; left:${pos.left - gapw}px; top: ${pos.top - 38}px; z-index: 99; position: fixed`;
+
+            if (/[\w\W]{3,}/ig.test(that.tipContent)) {
+              that.tipsDom = createDomElement('div', {class: 'form-message-tips', style: style});
+              that.tipsDom.innerHTML = that.tipContent;
+              document.body.appendChild(that.tipsDom);
+            }
+          }, 300);
+        }
+      },
+      // ext-> 鼠标out时事件
+      inputMouseout(e) {
+        if (this.form.disabledTips) return; // 禁用表单溢出和验证弹窗提示
+        clearTimeout(this.tipTimeHander);
+        let delDoms = document.querySelectorAll('.form-message-tips');
+        if (delDoms.length && this.tipsDom) {
+          for (let i = 0; i < delDoms.length; i++) { document.body.removeChild(delDoms[i]); }
+          this.tipsDom = null;
+        }
+      },
+      // ext-> 设置超出边界提示内容
+      setTipContent(value) {
+        if (this.validateState !== 'error') {
+          this.tipContent = value ? String(value) : '';
+          this.IS_SHOW_TIPS = this.getTipStatus(this.$el.querySelector('input'));
+        }
+      },
+      // ext-> 计算组件除padding的宽度
+      getPlaceWidth(el) {
+        let elStyl, paddingLeft, paddingRight;
+        if (el) {
+          elStyl = getComputedStyle(el);
+          paddingLeft = parseInt(elStyl.paddingLeft.replace('px', ''), 10);
+          paddingRight = parseInt(elStyl.paddingRight.replace('px', ''), 10);
+          return {
+            w: el.getBoundingClientRect().width - paddingLeft - paddingRight,
+            pl: paddingLeft
+          };
+        } else {
+          return {w: 0, pl: 0};
+        }
+      },
+      // ext-> 计算文本宽度
+      getTipContentWidth(el, text) {
+        let elStyl, fontSize, zhword, zhWidth;
+        text = text || '';
+        elStyl = getComputedStyle(el);
+        fontSize = parseInt(elStyl.fontSize.replace('px', ''), 10);
+        zhword = String(text).replace(/[0-9A-Za-z\-\:]/ig, '');
+        zhWidth = zhword.length * fontSize;
+        return (String(text).length - zhword.length) * fontSize * 0.56 + zhWidth;
+      },
+      // ext-> 获取tip动态配置
+      getTipStatus(el) {
+        let width, contentWidth;
+        if (el) {
+          width = this.getPlaceWidth(el).w;
+          contentWidth = this.getTipContentWidth(el, this.tipContent);
+          if (contentWidth > width) { return true; } else { return false; }
+        } else {
+          return false;
+        }
       }
     },
     mounted() {
@@ -272,6 +355,9 @@
           this.$on('el.form.change', this.onFieldChange);
         }
       }
+      this.$on('el.form.mouseover', this.inputMouseover); // ext-> 表单组件 mouseover 事件
+      this.$on('el.form.mouseout', this.inputMouseout); // ext-> 表单组件 mouseout 事件
+      this.$on('el.form.messagetips', this.setTipContent); // ext-> 弹出信息内容填充
     },
     beforeDestroy() {
       this.dispatch('ElForm', 'el.form.removeField', [this]);
