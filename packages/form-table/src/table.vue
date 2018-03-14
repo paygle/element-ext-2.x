@@ -101,7 +101,7 @@
           :border="border"
           :store="store"
           :style="{
-            width: layout.fixedWidth ? layout.fixedWidth + 'px' : ''
+            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
           }"></table-header>
       </div>
       <div
@@ -119,7 +119,7 @@
           :row-class-name="rowClassName"
           :row-style="rowStyle"
           :style="{
-            width: layout.fixedWidth ? layout.fixedWidth + 'px' : ''
+            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
           }">
         </table-body>
         <div
@@ -141,7 +141,7 @@
           :summary-method="summaryMethod"
           :store="store"
           :style="{
-            width: layout.fixedWidth ? layout.fixedWidth + 'px' : ''
+            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
           }"></table-footer>
       </div>
     </div>
@@ -164,7 +164,7 @@
           :border="border"
           :store="store"
           :style="{
-            width: layout.rightFixedWidth ? layout.rightFixedWidth + 'px' : ''
+            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
           }"></table-header>
       </div>
       <div
@@ -182,7 +182,7 @@
           :row-style="rowStyle"
           :highlight="highlightCurrentRow"
           :style="{
-            width: layout.rightFixedWidth ? layout.rightFixedWidth + 'px' : ''
+            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
           }">
         </table-body>
       </div>
@@ -198,7 +198,7 @@
           :summary-method="summaryMethod"
           :store="store"
           :style="{
-            width: layout.rightFixedWidth ? layout.rightFixedWidth + 'px' : ''
+            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
           }"></table-footer>
       </div>
     </div>
@@ -590,6 +590,7 @@
 
       shouldUpdateHeight() {
         return this.height ||
+          this.maxHeight ||
           this.fixedColumns.length > 0 ||
           this.rightFixedColumns.length > 0;
       },

@@ -28,8 +28,11 @@
         :autocomplete="autoComplete"
         :value="currentValue"
         ref="input"
+        :style="[customCrtStyl]"
         @mouseover="inputMouseover"
         @mouseout="inputMouseout"
+        @keydown="fixIeReadonly"
+        @keyup.enter="keyEnter"
         @input="handleInput"
         @focus="handleFocus"
         @blur="handleBlur"
@@ -81,7 +84,7 @@
       ref="textarea"
       v-bind="$props"
       :disabled="inputDisabled"
-      :style="textareaStyle"
+      :style="[textareaStyle, customCrtStyl]"
       @focus="handleFocus"
       @blur="handleBlur"
       @change="handleChange"
@@ -97,6 +100,20 @@
   import Migrating from 'element-ui/src/mixins/migrating';
   import calcTextareaHeight from './calcTextareaHeight';
   import merge from 'element-ui/src/utils/merge';
+  import { getFloatNumber, isOwnEmpty } from 'element-ui/src/utils/util'; // ext-> add
+  // ext-> add
+  const getMaxMinVal = function(value, max, min, type) {
+    if (type === 'number' && value !== '' && value !== '-') {
+      if (isNaN(value)) { value = 0; }
+      if (typeof max !== 'undefined' && !isNaN(max) && value > max) {
+        value = max;
+      }
+      if (typeof min !== 'undefined' && !isNaN(min) && value < min) {
+        value = min;
+      }
+    }
+    return value;
+  };
 
   export default {
     name: 'ElInput',
@@ -121,7 +138,10 @@
         prefixOffset: null,
         suffixOffset: null,
         hovering: false,
-        focused: false
+        focused: false,
+        isGetFloat: true, // ext-> 是否允许获取精度数
+        customSfStyl: '',
+        customStyl: '' // ext-> 自定义样式
       };
     },
 
@@ -169,6 +189,19 @@
         default: false
       },
       tabindex: String,
+      kind: { // ext-> 值类型, 可以取 string 和 number 两种类型
+        type: String,
+        default: 'string'
+      },
+      precision: { // ext-> 数字自定义精度
+        type: [Number, String],
+        default: -1
+      },
+      isAround: { // ext-> 是否四啥五入
+        type: Boolean,
+        default: false
+      },
+      getFillStyl: Function, // ext-> 获取自定义组件配色
       disabledTips: Boolean // ext-> 禁用表单弹窗提示
     },
 
@@ -203,6 +236,15 @@
       },
       showClear() {
         return this.clearable && this.currentValue !== '' && (this.focused || this.hovering);
+      },
+      // ext-> 自定义样式
+      customCrtStyl() {
+        if (typeof this.customStyl === 'object' && !isOwnEmpty(this.customStyl)) {
+          return this.customStyl;
+        } else if (typeof this.customSfStyl === 'object' && !isOwnEmpty(this.customSfStyl)) {
+          return this.customSfStyl;
+        }
+        return {};
       }
     },
 
@@ -228,10 +270,12 @@
         };
       },
       handleBlur(event) {
+        this.isGetFloat = true; // ext-> 扩展
         this.focused = false;
         this.$emit('blur', event);
         if (this.validateEvent) {
           this.dispatch('ElFormItem', 'el.form.blur', [this.currentValue]);
+          this.dispatch('ElForm', 'compare-change', [this]); // ext-> 比较着色
         }
         this.setMessageTips(); // ext-> 信息超出边界弹出提示
       },
@@ -254,11 +298,14 @@
         this.textareaCalcStyle = calcTextareaHeight(this.$refs.textarea, minRows, maxRows);
       },
       handleFocus(event) {
+        this.isGetFloat = false; // ext-> 扩展
         this.focused = true;
         this.$emit('focus', event);
       },
       handleInput(event) {
-        const value = event.target.value;
+        let value = event.target.value; // ext-> modify
+        value = this.getTypeVal(value); // ext-> add
+        value = getMaxMinVal(value, this.max, this.min, this.kind); // ext-> add
         this.$emit('input', value);
         this.setCurrentValue(value);
       },
@@ -266,6 +313,18 @@
         this.$emit('change', event.target.value);
       },
       setCurrentValue(value) {
+        // ext-> 设置精度或字符串
+        if (this.kind === 'number') {
+          if (this.precision > 0 && this.isGetFloat) {
+            value = getFloatNumber(this.precision, value, this.isAround);
+          } else {
+            value = (!isNaN(value) && value !== '') ? Number(value) : value;
+          }
+          value = getMaxMinVal(value, this.max, this.min, this.kind);
+        } else {
+          value = String(value);
+        }
+
         if (value === this.currentValue) return;
         this.$nextTick(_ => {
           this.resizeTextarea();
@@ -294,10 +353,42 @@
         this.setCurrentValue('');
         this.focus();
       },
+      // ext-> 获取类型值
+      getTypeVal(value) {
+        if (this.kind === 'number' && value !== '' && value !== '-') {
+          // 数值转化
+          if (this.precision > -1) {
+            value = isNaN(value) ? 0 : getFloatNumber(this.precision, value, this.isAround);
+          }
+          value = isNaN(value) ? value : Number(value);
+          value = getMaxMinVal(value, this.max, this.min, this.kind);
+        } else {
+          value = String(value);
+        }
+        return value;
+      },
+      // ext-> 独立样式设置
+      customfillStyl(value) {
+        if (typeof this.getFillStyl === 'function') {
+          this.customSfStyl = this.getFillStyl.call(null, value);
+        }
+      },
+      // ext-> 设置自定义样式
+      setCustomStyle(styl) {
+        this.customStyl = styl;
+      },
+      // ext-> KeyEnter事件
+      keyEnter(e) {
+        this.$emit('key-enter', e);
+      },
+      // ext-> 修复IE下readonly后退问题
+      fixIeReadonly(e) {
+        if (this.readonly && e.keyCode === 8) e.preventDefault();
+      },
       // ext-> 信息超出边界弹出提示
       setMessageTips() {
         if (!this.disabledTips && this.type !== 'textarea') {
-          this.$nextTick(()=>{
+          this.$nextTick(() => {
             this.dispatch('ElFormItem', 'el.form.messagetips', [this.value]);
           });
         }
@@ -318,6 +409,7 @@
 
     created() {
       this.$on('inputSelect', this.inputSelect);
+      this.$on('custom-style', this.setCustomStyle);
     },
 
     mounted() {
@@ -326,7 +418,10 @@
         this.prefixOffset = this.calcIconOffset('pre');
         this.suffixOffset = this.calcIconOffset('suf');
       }
-      this.setMessageTips(); // ext-> 信息超出边界弹出提示
+      this.$nextTick(() => { // ext-> 扩展
+        this.dispatch('ElForm', 'compare-change', this);
+        this.setMessageTips(); // ext-> 信息超出边界弹出提示
+      });
     }
   };
 </script>

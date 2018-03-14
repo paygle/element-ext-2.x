@@ -15,7 +15,7 @@
       <slot></slot>
       <transition name="el-zoom-in-top">
         <div
-          v-if="validateState === 'error' && showMessage && form.showMessage && !form.formPopTips"
+          v-if="validateState === 'error' && showMessage && form.showMessage"
           class="el-form-item__error"
           :class="{
             'el-form-item__error--inline': typeof inlineMessage === 'boolean'
@@ -33,8 +33,13 @@
   import AsyncValidator from 'async-validator';
   import emitter from 'element-ui/src/mixins/emitter';
   import objectAssign from 'element-ui/src/utils/merge';
-  import { noop, getPropByPath } from 'element-ui/src/utils/util';
+  import { noop, getPropByPath, typeOf } from 'element-ui/src/utils/util';
   import { createDomElement } from 'element-ui/src/utils/dom'; // 扩展
+
+  // ext-> 自定义日期兼容转换
+  const compatDateStr = function(date) {
+    return typeof date === 'string' ? String(date).replace('-', '/') : date;
+  };
 
   export default {
     name: 'ElFormItem',
@@ -52,9 +57,12 @@
     inject: ['elForm'],
 
     props: {
+      model: Object, // ext->非数据联验证-数据对象
+      value: null, // ext-> 非数据联验证的非Object类型的值
+      scopeName: String, // ext-> 表单所属域名称与 form 的 scopeName 一致
       label: String,
       labelWidth: String,
-      prop: String,
+      prop: String, // 验证规则里面对应的属性
       required: {
         type: Boolean,
         default: undefined
@@ -124,15 +132,18 @@
       fieldValue: {
         cache: false,
         get() {
-          const model = this.form.model;
+          const model = this.model || this.form.model; // ext-> modify
           if (!model || !this.prop) { return; }
 
           let path = this.prop;
           if (path.indexOf(':') !== -1) {
             path = path.replace(/:/, '.');
           }
-
-          return getPropByPath(model, path, true).v;
+          if (typeof this.value !== 'undefined') {
+            return this.value; // ext-> modify
+          } else { // ext-> modify
+            return getPropByPath(model, path, true).v;
+          }
         }
       },
       isRequired() {
@@ -158,6 +169,12 @@
       },
       sizeClass() {
         return (this.$ELEMENT || {}).size || this.elFormItemSize;
+      },
+      scopeNamed() { // ext-> 表单作用域
+        return this.scopeName || 'ElForm';
+      },
+      showInlineMsg() { // ext-> 弹出提示控制
+        return this.showMessage && this.form.showMessage;
       }
     },
     data() {
@@ -170,14 +187,24 @@
         IS_SHOW_TIPS: false, // ext-> 默认禁用 tooltip功能
         TIP_POP_WIDTH: 0,
         tipContent: '', // ext-> tooltip内容
-        tipTimeHander: null, // 扩展
-        tipsDom: null // 扩展
+        tipTimeHander: null, // ext-> 扩展
+        tipsDom: null, // ext-> 扩展
+        isCustomStyl: false, // ext-> 是否以自定义为主
+        customStyl: '',
+        errStyl: {} // ext-> 错误样式设置
       };
     },
     methods: {
       validate(trigger, callback = noop) {
         this.validateDisabled = false;
         const rules = this.getFilteredRule(trigger);
+        // ext-> 验证样式设置
+        this.$nextTick(()=> {
+          this.customStylSet(this.prop, this.validateState);
+          // ext-> 触发外部校验
+          if (typeof this.form.validTrigger === 'function') this.form.validTrigger.call(null, this.form.model);
+        });
+
         if ((!rules || rules.length === 0) && this.required === undefined) {
           callback();
           return true;
@@ -196,7 +223,7 @@
         const validator = new AsyncValidator(descriptor);
         const model = {};
 
-        model[this.prop] = this.fieldValue;
+        model[this.prop] = this.getTypeData(this.fieldValue, rules);
 
         validator.validate(model, { firstFields: true }, (errors, fields) => {
           this.validateState = !errors ? 'success' : 'error';
@@ -215,22 +242,38 @@
         this.validateState = '';
         this.validateMessage = '';
 
-        let model = this.form.model;
+        let model = this.model || this.form.model; // ext-> modify
         let value = this.fieldValue;
         let path = this.prop;
+        let prop; // ext-> modify
+
         if (path.indexOf(':') !== -1) {
           path = path.replace(/:/, '.');
         }
 
-        let prop = getPropByPath(model, path, true);
+        if (typeOf(model) === 'Object') { // ext-> modify
+          prop = getPropByPath(model, path, true);
+        }
 
         if (Array.isArray(value)) {
           this.validateDisabled = true;
-          prop.o[prop.k] = [].concat(this.initialValue);
+          if (typeof this.value !== 'undefined') { // ext-> modify
+            this.$emit('input', [].concat(this.initialValue));
+          } else if (prop) {
+            prop.o[prop.k] = [].concat(this.initialValue);
+          }
         } else {
           this.validateDisabled = true;
-          prop.o[prop.k] = this.initialValue;
+          if (typeof this.value !== 'undefined') { // ext-> modify
+            this.$emit('input', this.initialValue);
+          } else if (prop) {
+            prop.o[prop.k] = this.initialValue;
+          }
         }
+        /* Select 的值被代码改变时不会触发校验，
+           这里需要强行触发一次，刷新 validateDisabled 的值，
+           确保 Select 下一次值改变时能正确触发校验 */
+        this.broadcast('ElSelect', 'fieldReset');
       },
       getRules() {
         let formRules = this.form.rules;
@@ -259,9 +302,47 @@
 
         this.validate('change');
       },
+      // ext-> 自定义样式设置
+      customStylSet(field, status, styl) {
+        // 验证样式设置
+        if (typeof styl !== 'undefined') this.customStyl = styl;
+        if (status === 'error') {
+          this.broadcast('ElInput', 'custom-style', this.errStyl);
+        } else if (status === 'custom' && this.validateState !== 'error') {
+          this.broadcast('ElInput', 'custom-style', styl);
+        } else if ((this.isCustomStyl && status !== 'custom') || styl === '') {
+          if (this.customStyl === '' && this.validateState !== 'error') {
+            this.broadcast('ElInput', 'custom-style', {});
+          }
+        }
+      },
+      // ext-> 自定义获取日期数据类型
+      getTypeData(value, rules) {
+        let typevalue = '', cdate;
+        if (typeOf(rules) === 'Array') {
+          for (let i = 0; i < rules.length; i++) {
+            if (typeOf(rules[i]) === 'Object' && rules[i]['type'] === 'date' && typeOf(value) === 'String') {
+              cdate = new Date(compatDateStr(value));
+            }
+          }
+        } else if (typeOf(rules) === 'Object' && rules.type === 'date' && typeOf(value) === 'String') {
+          cdate = new Date(compatDateStr(value));
+        }
+
+        if (typeOf(value) === 'Date') {
+          typevalue = value;
+        } else if (typeOf(cdate) === 'Date' && !isNaN(cdate.getTime())) {
+          typevalue = cdate;
+        } else {
+          typevalue = value;
+        }
+        return typevalue;
+      },
       // ext-> 鼠标over时事件
       inputMouseover(e) {
         if (this.form.disabledTips) return; // 禁用表单溢出和验证弹窗提示
+        if (this.showInlineMsg && this.validateState === 'error') return;
+
         let pos, gapw, style, color = '', that = this;
         let inputEl = this.$el.querySelector('input') || this.$el.querySelector('textarea');
         let inputWP = this.getPlaceWidth(inputEl);
@@ -285,6 +366,8 @@
       // ext-> 鼠标out时事件
       inputMouseout(e) {
         if (this.form.disabledTips) return; // 禁用表单溢出和验证弹窗提示
+        if (this.showInlineMsg && this.validateState === 'error') return;
+
         clearTimeout(this.tipTimeHander);
         let delDoms = document.querySelectorAll('.form-message-tips');
         if (delDoms.length && this.tipsDom) {
@@ -338,7 +421,7 @@
     },
     mounted() {
       if (this.prop) {
-        this.dispatch('ElForm', 'el.form.addField', [this]);
+        this.dispatch(this.scopeNamed, 'el.form.addField', [this]); // ext-> modify
 
         let initialValue = this.fieldValue;
         if (Array.isArray(initialValue)) {
@@ -360,7 +443,7 @@
       this.$on('el.form.messagetips', this.setTipContent); // ext-> 弹出信息内容填充
     },
     beforeDestroy() {
-      this.dispatch('ElForm', 'el.form.removeField', [this]);
+      this.dispatch(this.scopeNamed, 'el.form.removeField', [this]); // ext-> modify
     }
   };
 </script>

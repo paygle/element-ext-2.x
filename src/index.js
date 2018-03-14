@@ -71,6 +71,7 @@ import Main from '../packages/main/index.js';
 import Footer from '../packages/footer/index.js';
 import FormTable from '../packages/form-table/index.js';
 import FormTableColumn from '../packages/form-table-column/index.js';
+import Address from '../packages/address/index.js';
 import locale from 'element-ui/src/locale';
 import CollapseTransition from 'element-ui/src/transitions/collapse-transition';
 
@@ -142,6 +143,7 @@ const components = [
   Footer,
   FormTable,
   FormTableColumn,
+  Address,
   CollapseTransition
 ];
 
@@ -250,7 +252,8 @@ module.exports = {
   Main,
   Footer,
   FormTable,
-  FormTableColumn
+  FormTableColumn,
+  Address
 };
 
 module.exports.default = module.exports;

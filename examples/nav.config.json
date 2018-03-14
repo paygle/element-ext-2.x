@@ -137,6 +137,10 @@
               "title": "Form 表单"
             },
             {
+              "path": "/address",
+              "title": "Address 地址选择"
+            },
+            {
               "path": "/form-table",
               "title": "FormTable 表格表单"
             }

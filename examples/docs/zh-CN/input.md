@@ -801,6 +801,7 @@ export default {
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
 | disabled-tips | 禁用表单验证弹出提示功能 | boolean | — | false |
+| kind | 绑定的数值类型 | String | string 或 number | string |
 
 
 * **原始属性**
@@ -809,8 +810,8 @@ export default {
 |-------------  |---------------- |---------------- |---------------------- |-------- |
 | type         | 类型   | string  | text / textarea | text |
 | value         | 绑定值           | string / number  | — | — |
-| maxlength     | 最大输入长度      | number          |  —  | — |
-| minlength     | 最小输入长度      | number          | — | — |
+| maxlength     | 原生属性，最大输入长度      | number          |  —  | — |
+| minlength     | 原生属性，最小输入长度      | number          | — | — |
 | placeholder   | 输入框占位文本    | string          | — | — |
 | clearable     | 是否可清空        | boolean         | — | false |
 | disabled      | 禁用            | boolean         | — | false   |
