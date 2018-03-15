@@ -20,7 +20,7 @@
         tableData: [{
           date: '2016-05-11',
           name: '王小虎，上海市普陀区金沙江路普陀区',
-          province: '上海',
+          province: '上海上海市普陀区金沙江路普陀区上海市普陀区金沙江路普陀区',
           city: '普陀区',
           address: 'shanghai',
           zip: 200333,
@@ -661,6 +661,10 @@
             <el-option label="活动区域二,王小上海市普陀区金沙" value="beijing"></el-option>
           </el-select>
         </template>
+      </el-form-table-column>
+      <el-form-table-column
+        prop="province"
+        label="区域">
       </el-form-table-column>
     </el-form-table>
   </template>
@@ -1797,7 +1801,7 @@
 :::demo 通过设置 type="expand" 和 `Scoped slot` 可以开启展开行功能，`el-form-table-column` 的模板会被渲染成为展开行的内容，展开行可访问的属性与使用自定义列模板时的 `Scoped slot` 相同。
 ```html
 <template>
-  <!-- <el-form-table
+  <el-form-table
     :data="tableData5"
     style="width: 100%">
     <el-form-table-column type="expand">
@@ -1839,7 +1843,7 @@
       label="描述"
       prop="desc">
     </el-form-table-column>
-  </el-form-table> -->
+  </el-form-table>
 </template>
 
 <style>
