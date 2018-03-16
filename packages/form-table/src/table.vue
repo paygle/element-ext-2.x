@@ -527,7 +527,7 @@
         } else if (typeof rowIndexs === 'string') {
           if (rowIndexs === 'all') { // 格式:  all
             for (let k = 0; k < rows.length; k++) setRowIndexStyl.call(this, k, styl);
-          } else if (/^\d+\-\d+$/g.test(rowIndexs)) { //格式: 0-12
+          } else if (/^\d+\-\d+$/g.test(rowIndexs)) { // 格式: 0-12
             let span = rowIndexs.split('-');
             for (let k = parseInt(span[0], 10); k <= parseInt(span[1], 10); k++) {
               setRowIndexStyl.call(this, k, styl);
@@ -573,7 +573,7 @@
         });
       },
       // 验证扩展验证方法
-      validate(callback) {
+      validate(callback, show = false) {
         if (!this.tableData) {
           console && console.warn('[Element Warn][Form-table]data is required for validate to work!');
           return;
@@ -592,7 +592,7 @@
 
         let valid = true;
         let count = 0;
-        let errorsBox=[]; // ext-> add
+        let errorsBox = []; // ext-> add
 
         // 如果需要验证的fields为空，调用验证时立刻返回callback
         if (this.fields.length === 0 && callback) {
@@ -603,16 +603,16 @@
             if (errors) {
               valid = false;
               let e = errors[0], f = e['field']; // ext-> add
-              errorsBox.push({msg:e['message'], f:f, v:field.value}); // ext-> add
+              errorsBox.push({msg: e['message'], f: f, v: field.value}); // ext-> add
             }
             if (typeof callback === 'function' && ++count === this.fields.length) {
               // ext-> 执行完所以的fields校验后，执行回调
               let err = '', errObj;
-              for(let j=0; j<errorsBox.length; j++) {
-                errObj=errorsBox[j];
-                err+= '<p>值为（'+ errObj.v +'）的输入错误：'+ errObj.msg+'；</p>';
+              for (let j = 0; j < errorsBox.length; j++) {
+                errObj = errorsBox[j];
+                err += `<p>值为“${errObj.v}”的输入错误：${errObj.msg}；</p>`;
               }
-              if(show && (err.length > 0)) {
+              if (show && (err.length > 0)) {
                 Notification.error({ title: '验证错误', message: err });
               }
               callback(valid, err); // ext-> modify
@@ -643,7 +643,7 @@
       // ext-> 跳转到输入框
       jumpToFocus(e) {
         if (e.keyCode === 17) this.ctrlKey = true;
-        if (this.ctrlKey &&  [37, 39].indexOf(e.keyCode) > -1) { // left-right
+        if (this.ctrlKey && [37, 39].indexOf(e.keyCode) > -1) { // left-right
           this.store.updateTabindex(this.startTabindex, 'h');
           this.store.states.direction = 'h';
         } else if (this.ctrlKey && [38, 40].indexOf(e.keyCode) > -1) { // up-down
@@ -767,13 +767,13 @@
 
       ieMaxHeight() { // ext-> 修复IE9表格引起的页面抖动
         let len = Array.isArray(this.data) ? this.data.length : 0;
-        if(typeof this.height === 'undefined' && len > 0 &&
-          navigator.appName == "Microsoft Internet Explorer" &&
-          navigator.appVersion .split(";")[1].replace(/\s/g,'')=="MSIE9.0") {
+        if (typeof this.height === 'undefined' && len > 0 &&
+          navigator.appName === 'Microsoft Internet Explorer' &&
+          navigator.appVersion .split(';')[1].replace(/\s/g, '') === 'MSIE9.0') {
           return {maxHeight: (30 * len + 80) + 'px', overflow: 'hidden'};
         }
         return {};
-      },
+      }
     },
 
     watch: {
