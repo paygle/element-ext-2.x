@@ -28,7 +28,7 @@
         :autocomplete="autoComplete"
         :value="currentValue"
         ref="input"
-        :style="[customCrtStyl]"
+        :style="[displayStyl]"
         @mouseover="inputMouseover"
         @mouseout="inputMouseout"
         @keydown="fixIeReadonly"
@@ -84,7 +84,7 @@
       ref="textarea"
       v-bind="$props"
       :disabled="inputDisabled"
-      :style="[textareaStyle, customCrtStyl]"
+      :style="[textareaStyle, displayStyl]"
       @focus="handleFocus"
       @blur="handleBlur"
       @change="handleChange"
@@ -140,8 +140,8 @@
         hovering: false,
         focused: false,
         isGetFloat: true, // ext-> 是否允许获取精度数
-        customSfStyl: '',
-        customStyl: '' // ext-> 自定义样式
+        fillStyl: '', // ext-> 填充样式
+        compareStyl: '' // ext-> 比较样式
       };
     },
 
@@ -201,7 +201,7 @@
         type: Boolean,
         default: false
       },
-      getFillStyl: Function, // ext-> 获取自定义组件配色
+      getFillStyl: Function, // ext-> 获取填充样式，优先级低于比较样式，返回Object样式对象
       disabledTips: Boolean // ext-> 禁用表单弹窗提示
     },
 
@@ -237,12 +237,12 @@
       showClear() {
         return this.clearable && this.currentValue !== '' && (this.focused || this.hovering);
       },
-      // ext-> 自定义样式
-      customCrtStyl() {
-        if (typeof this.customStyl === 'object' && !isOwnEmpty(this.customStyl)) {
-          return this.customStyl;
-        } else if (typeof this.customSfStyl === 'object' && !isOwnEmpty(this.customSfStyl)) {
-          return this.customSfStyl;
+      // ext-> 显示样式
+      displayStyl() {
+        if (typeof this.compareStyl === 'object' && !isOwnEmpty(this.compareStyl)) {
+          return this.compareStyl;
+        } else if (typeof this.fillStyl === 'object' && !isOwnEmpty(this.fillStyl)) {
+          return this.fillStyl;
         }
         return {};
       }
@@ -251,6 +251,7 @@
     watch: {
       'value'(val, oldValue) {
         this.setCurrentValue(val);
+        this.customfillStyl(val); // ext-> fill style
       }
     },
 
@@ -367,16 +368,14 @@
         }
         return value;
       },
-      // ext-> 独立样式设置
+      // ext-> 设置填充样式，优先级低于比较样式
       customfillStyl(value) {
         if (typeof this.getFillStyl === 'function') {
-          this.customSfStyl = this.getFillStyl.call(null, value);
+          this.fillStyl = this.getFillStyl.call(null, value);
         }
       },
-      // ext-> 设置自定义样式
-      setCustomStyle(styl) {
-        this.customStyl = styl;
-      },
+      // ext-> 设置比较样式
+      setCompareStyle(styl) { this.compareStyl = styl; },
       // ext-> KeyEnter事件
       keyEnter(e) {
         this.$emit('key-enter', e);
@@ -409,7 +408,8 @@
 
     created() {
       this.$on('inputSelect', this.inputSelect);
-      this.$on('custom-style', this.setCustomStyle);
+      this.$on('compare-style', this.setCompareStyle); // ext-> 比较样式
+      this.customfillStyl(this.value); // ext-> fill style
     },
 
     mounted() {
@@ -419,7 +419,7 @@
         this.suffixOffset = this.calcIconOffset('suf');
       }
       this.$nextTick(() => { // ext-> 扩展
-        this.dispatch('ElForm', 'compare-change', this);
+        this.dispatch('ElForm', 'compare-change', [this]);
         this.setMessageTips(); // ext-> 信息超出边界弹出提示
       });
     }

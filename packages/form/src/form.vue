@@ -66,7 +66,7 @@
         if (field) {
           // 设置初始值
           field.errStyl = this.errStyl;
-          if (this.compareStyl) field.isCustomStyl = true;
+          if (this.compareStyl) field.isCompare = true;
           this.fields.push(field);
         }
       });
@@ -160,7 +160,7 @@
           let fields = cp.stylefields || cp.fields;
           fields.forEach((f) => {
             that.fields.forEach((field) => {
-              if (f === field.prop) field.customStylSet(field.prop, 'custom', styl);
+              if (f === field.prop) field.setCompareStyl(field.prop, 'compare', styl);
             });
           });
         }

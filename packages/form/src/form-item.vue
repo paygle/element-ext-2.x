@@ -57,7 +57,7 @@
     inject: ['elForm'],
 
     props: {
-      model: Object, // ext->非数据联验证-数据对象
+      model: Object, // ext-> 非数据联验证-数据对象
       value: null, // ext-> 非数据联验证的非Object类型的值
       scopeName: String, // ext-> 表单所属域名称与 form 的 scopeName 一致
       label: String,
@@ -189,7 +189,7 @@
         tipContent: '', // ext-> tooltip内容
         tipTimeHander: null, // ext-> 扩展
         tipsDom: null, // ext-> 扩展
-        isCustomStyl: false, // ext-> 是否以自定义为主
+        isCompare: false, // ext-> 是否为比较样式
         customStyl: '',
         errStyl: {} // ext-> 错误样式设置
       };
@@ -200,7 +200,7 @@
         const rules = this.getFilteredRule(trigger);
         // ext-> 验证样式设置
         this.$nextTick(()=> {
-          this.customStylSet(this.prop, this.validateState);
+          this.setCompareStyl(this.prop, this.validateState);
           // ext-> 触发外部校验
           if (typeof this.form.validTrigger === 'function') this.form.validTrigger.call(null, this.form.model);
         });
@@ -274,6 +274,7 @@
            这里需要强行触发一次，刷新 validateDisabled 的值，
            确保 Select 下一次值改变时能正确触发校验 */
         this.broadcast('ElSelect', 'fieldReset');
+        this.broadcast('ElTimeSelect', 'fieldReset', this.initialValue);
       },
       getRules() {
         let formRules = this.form.rules;
@@ -288,7 +289,12 @@
         const rules = this.getRules();
 
         return rules.filter(rule => {
-          return !rule.trigger || rule.trigger.indexOf(trigger) !== -1;
+          if (!rule.trigger || trigger === '') return true;
+          if (Array.isArray(rule.trigger)) {
+            return rule.trigger.indexOf(trigger) > -1;
+          } else {
+            return rule.trigger === trigger;
+          }
         }).map(rule => objectAssign({}, rule));
       },
       onFieldBlur() {
@@ -302,17 +308,17 @@
 
         this.validate('change');
       },
-      // ext-> 自定义样式设置
-      customStylSet(field, status, styl) {
+      // ext-> 比较样式设置
+      setCompareStyl(field, status, styl) {
         // 验证样式设置
         if (typeof styl !== 'undefined') this.customStyl = styl;
         if (status === 'error') {
-          this.broadcast('ElInput', 'custom-style', this.errStyl);
-        } else if (status === 'custom' && this.validateState !== 'error') {
-          this.broadcast('ElInput', 'custom-style', styl);
-        } else if ((this.isCustomStyl && status !== 'custom') || styl === '') {
+          this.broadcast('ElInput', 'compare-style', this.errStyl);
+        } else if (status === 'compare' && this.validateState !== 'error') {
+          this.broadcast('ElInput', 'compare-style', styl);
+        } else if ((this.isCompare && status !== 'compare') || styl === '') {
           if (this.customStyl === '' && this.validateState !== 'error') {
-            this.broadcast('ElInput', 'custom-style', {});
+            this.broadcast('ElInput', 'compare-style', {});
           }
         }
       },

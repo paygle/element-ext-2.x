@@ -14,7 +14,7 @@
       }
     </script>
     <div id="app"></div><% if (process.env.NODE_ENV === 'production') { %>
-    <script src="//cdn.jsdelivr.net/npm/vue@2.5.2/dist/vue.runtime.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.runtime.min.js"></script>
     <script src="//cdn.jsdelivr.net/npm/vue-router@2.7.0/dist/vue-router.min.js"></script><% } %>
   </body>
   <% if (process.env.NODE_ENV === 'production') { %><script>

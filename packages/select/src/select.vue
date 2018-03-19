@@ -7,6 +7,7 @@
     <div
       class="el-select__tags"
       v-if="multiple"
+      :tabindex="tabindex"
       ref="tags"
       :style="{ 'max-width': inputWidth - 32 + 'px' }">
       <span v-if="collapseTags && selected.length">
@@ -45,6 +46,7 @@
       <input
         type="text"
         class="el-select__input"
+        :tabindex="tabindex"
         :class="[selectSize ? `is-${ selectSize }` : '']"
         :disabled="selectDisabled"
         :autocomplete="autoComplete"
@@ -71,6 +73,7 @@
       :placeholder="currentPlaceholder"
       :name="name"
       :id="id"
+      :tabindex="tabindex"
       :auto-complete="autoComplete"
       :size="selectSize"
       :disabled="selectDisabled"
@@ -283,6 +286,11 @@
         type: Boolean,
         default: true
       },
+      getFillStyl: Function, // ext-> 获取自定义组件配色
+      optionsData: [Array, Object], // ext-> Option初始化数据
+      translated: Boolean, // ext-> 转化为翻译组件
+      readonly: Boolean, // ext-> 只读代替禁用
+      tabindex: String, // ext-> Tab 序值
       disabledTips: Boolean // ext-> 禁用表单弹窗提示
     },
 
@@ -321,6 +329,7 @@
       },
 
       value(val) {
+        if (val === null || val === 'null') this.$emit('input', ''); // ext-> 处理值为null时为空
         if (this.multiple) {
           this.resetInputHeight();
           if (val.length > 0 || (this.$refs.input && this.query !== '')) {
@@ -471,8 +480,9 @@
       emitChange(val) {
         if (!valueEquals(this.value, val)) {
           this.$emit('change', val);
-          this.dispatch('ElFormItem', 'el.form.change', val);
-          this.setMessageTips(); // ext-> 信息超出边界弹出提示
+          this.dispatch('ElFormItem', 'el.form.change', [val]);
+          this.dispatch('ElForm', 'compare-change', [this]); // ext-> compare
+          this.setMessageTips(); // ext-> 信息超出边界弹出提
         }
       },
 
@@ -514,6 +524,7 @@
           this.selectedLabel = option.currentLabel;
           this.selected = option;
           if (this.filterable) this.query = this.selectedLabel;
+          this.dispatch('ElForm', 'compare-change', [this]); // ext-> compare
           return;
         }
         let result = [];
@@ -525,6 +536,7 @@
         this.selected = result;
         this.$nextTick(() => {
           this.resetInputHeight();
+          this.dispatch('ElForm', 'compare-change', [this]); // ext-> compare
         });
       },
 

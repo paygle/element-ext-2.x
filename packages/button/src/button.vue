@@ -49,7 +49,8 @@
       disabled: Boolean,
       plain: Boolean,
       autofocus: Boolean,
-      round: Boolean
+      round: Boolean,
+      tabindex: String // ext-> Tab ĞòÖµ
     },
 
     computed: {

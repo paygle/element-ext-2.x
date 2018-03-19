@@ -503,6 +503,7 @@ export default {
       gpuAcceleration: false
     };
     this.placement = PLACEMENT_MAP[this.align] || PLACEMENT_MAP.left;
+    this.$on('fieldReset', this.handleFieldReset);
     this.setMessageTips(); // ext-> 信息超出边界弹出提示
   },
 
@@ -634,6 +635,10 @@ export default {
 
     handleClose() {
       this.pickerVisible = false;
+    },
+
+    handleFieldReset(initialValue) {
+      this.userInput = initialValue;
     },
 
     handleFocus() {

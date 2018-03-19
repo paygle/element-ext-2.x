@@ -99,6 +99,10 @@
     position: relative;
     font-size: 12px; /* ext-> modify */
     @include utils-clearfix;
+
+    .el-input-group {
+      vertical-align: middle;
+    }
   }
   @include e(error) {
     color: $--color-danger;

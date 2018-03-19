@@ -44,7 +44,9 @@ export default {
 
     background: Boolean,
 
-    disabled: Boolean
+    disabled: Boolean,
+
+    params: null // ext-> 追加参数
   },
 
   data() {
@@ -194,7 +196,7 @@ export default {
         handleChange(val) {
           if (val !== this.$parent.internalPageSize) {
             this.$parent.internalPageSize = val = parseInt(val, 10);
-            this.$parent.$emit('size-change', val);
+            this.$parent.$emit('size-change', val, this.params); // ext->modify
           }
         }
       }
@@ -210,6 +212,14 @@ export default {
       },
 
       components: { ElInput },
+
+      watch: {
+        '$parent.internalPageSize'() {
+          this.$nextTick(() => {
+            this.$refs.input.$el.querySelector('input').value = this.$parent.internalCurrentPage;
+          });
+        }
+      },
 
       methods: {
         handleFocus(event) {
@@ -368,12 +378,12 @@ export default {
           this.internalCurrentPage = newVal;
           if (oldVal !== newVal) {
             this.$emit('update:currentPage', newVal);
-            this.$emit('current-change', this.internalCurrentPage);
+            this.$emit('current-change', this.internalCurrentPage, this.params); // ext->modify
           }
         });
       } else {
         this.$emit('update:currentPage', newVal);
-        this.$emit('current-change', this.internalCurrentPage);
+        this.$emit('current-change', this.internalCurrentPage, this.params); // ext->modify
       }
     },
 

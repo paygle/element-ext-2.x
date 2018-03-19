@@ -10,7 +10,8 @@
   "extends": "elemefe",
   "rules": {
     "no-restricted-globals": ["error", "event", "fdescribe"],
-    "one-var":"off"
+    "one-var":"off",
+    "no-trailing-spaces":"off"
   },
   "parserOptions": {
     "ecmaFeatures": {

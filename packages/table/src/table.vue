@@ -621,7 +621,8 @@
     data() {
       const store = new TableStore(this, {
         rowKey: this.rowKey,
-        defaultExpandAll: this.defaultExpandAll
+        defaultExpandAll: this.defaultExpandAll,
+        selectOnIndeterminate: this.selectOnIndeterminate
       });
       const layout = new TableLayout({
         store,
