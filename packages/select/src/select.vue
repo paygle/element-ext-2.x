@@ -4,15 +4,26 @@
     :class="[selectSize ? 'el-select--' + selectSize : '']"
     @click.stop="toggleMenu"
     v-clickoutside="handleClose">
+    <div v-if="translated" class="translated">
+      <el-input
+        ref="reference"
+        v-model="selectedLabel"
+        type="text"
+        :name="name"
+        :id="id"
+        :size="selectSize"
+        disputed>
+      </el-input>
+    </div>
     <div
       class="el-select__tags"
-      v-if="multiple"
+      v-if="!translated && multiple"
       :tabindex="tabindex"
       ref="tags"
       :style="{ 'max-width': inputWidth - 32 + 'px' }">
       <span v-if="collapseTags && selected.length">
         <el-tag
-          :closable="!selectDisabled"
+          :closable="!selectDisabled && !disputed"
           :size="collapseTagSize"
           :hit="selected[0].hitState"
           type="info"
@@ -33,7 +44,7 @@
         <el-tag
           v-for="item in selected"
           :key="getValueKey(item)"
-          :closable="!selectDisabled"
+          :closable="!selectDisabled && !disputed"
           :size="collapseTagSize"
           :hit="item.hitState"
           type="info"
@@ -48,7 +59,7 @@
         class="el-select__input"
         :tabindex="tabindex"
         :class="[selectSize ? `is-${ selectSize }` : '']"
-        :disabled="selectDisabled"
+        :disabled="selectDisabled || disputed"
         :autocomplete="autoComplete"
         @focus="handleFocus"
         @click.stop
@@ -67,6 +78,7 @@
         ref="input">
     </div>
     <el-input
+      v-if="!translated"
       ref="reference"
       v-model="selectedLabel"
       type="text"
@@ -78,6 +90,7 @@
       :size="selectSize"
       :disabled="selectDisabled"
       :readonly="!filterable || multiple || !visible"
+      :disputed="disputed"
       :validate-event="false"
       :class="{ 'is-focus': visible }"
       @focus="handleFocus"
@@ -103,7 +116,7 @@
       <el-select-menu
         ref="popper"
         :append-to-body="popperAppendToBody"
-        v-show="visible && emptyText !== false">
+        v-show="!translated && !disputed && visible && emptyText !== false">
         <el-scrollbar
           tag="ul"
           wrap-class="el-select-dropdown__wrap"
@@ -116,7 +129,17 @@
             created
             v-if="showNewOption">
           </el-option>
-          <slot></slot>
+          <!-- ext=> 内部数据选项 -->
+          <template v-if="innerOptions.length">
+            <el-option
+              v-for="item in innerOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled">
+            </el-option>
+          </template>
+          <slot v-else></slot>
         </el-scrollbar>
         <p
           class="el-select-dropdown__empty"
@@ -152,6 +175,21 @@
     'medium': 36,
     'small': 32,
     'mini': 28
+  };
+
+  // ext-> add, init field opts
+  const setInitOptions = (options, fields) => {
+    let initOptions = [];
+    if (options && options.length && fields) {
+      for (let i = 0; i < options.length; i++) {
+        initOptions.push({});
+        initOptions[i]['label'] = options[i][fields.label];
+        initOptions[i]['value'] = options[i][fields.value];
+        initOptions[i]['disabled'] = options[i][fields.disabled] || false;
+      }
+      return initOptions;
+    }
+    return initOptions;
   };
 
   export default {
@@ -286,10 +324,24 @@
         type: Boolean,
         default: true
       },
+      multiSplit: { // ext-> 多选时翻译分隔符
+        type: String,
+        default: '/'
+      },
       getFillStyl: Function, // ext-> 获取自定义组件配色
-      optionsData: [Array, Object], // ext-> Option初始化数据
+      optionsData: Array, // ext-> Option初始化数据
+      labelVal: { // options 数据项自定义标签和值属性
+        type: Object,
+        default: () => {
+          return {
+            label: 'label',
+            value: 'value',
+            disabled: 'disabled'
+          };
+        }
+      },
       translated: Boolean, // ext-> 转化为翻译组件
-      readonly: Boolean, // ext-> 只读代替禁用
+      disputed: Boolean, // ext-> 代替禁用
       tabindex: String, // ext-> Tab 序值
       disabledTips: Boolean // ext-> 禁用表单弹窗提示
     },
@@ -313,7 +365,8 @@
         query: '',
         previousQuery: null,
         inputHovering: false,
-        currentPlaceholder: ''
+        currentPlaceholder: '',
+        innerOptions: [] // ext-> 内部数据构建options时使用
       };
     },
 
@@ -410,6 +463,10 @@
         if (this.defaultFirstOption && (this.filterable || this.remote) && this.filteredOptionsCount) {
           this.checkDefaultFirstOption();
         }
+      },
+      // ext-> add watch
+      optionsData() {
+        this.innerOptions = setInitOptions(this.optionsData, this.labelVal);
       }
     },
 
@@ -688,7 +745,7 @@
       },
 
       toggleMenu() {
-        if (!this.selectDisabled) {
+        if (!this.selectDisabled && !this.disputed) {
           this.visible = !this.visible;
           if (this.visible) {
             (this.$refs.input || this.$refs.reference).focus();
@@ -716,7 +773,7 @@
 
       deleteTag(event, tag) {
         let index = this.selected.indexOf(tag);
-        if (index > -1 && !this.selectDisabled) {
+        if (index > -1 && !this.selectDisabled && !this.disputed) {
           const value = this.value.slice();
           value.splice(index, 1);
           this.$emit('input', value);
@@ -742,6 +799,7 @@
       },
 
       resetInputWidth() {
+        if (!this.$refs.reference || !this.$refs.reference.$el) return; // ext-> add
         this.inputWidth = this.$refs.reference.$el.getBoundingClientRect().width;
       },
 
@@ -818,6 +876,7 @@
     },
 
     mounted() {
+      this.innerOptions = setInitOptions(this.optionsData, this.labelVal); // ext-> add init
       if (this.multiple && Array.isArray(this.value) && this.value.length > 0) {
         this.currentPlaceholder = '';
       }

@@ -327,6 +327,11 @@
 
       spanMethod: Function,
 
+      selectOnIndeterminate: {
+        type: Boolean,
+        default: true
+      },
+
       rules: Object, // ext-> 验证规则
 
       validateOnRuleChange: { // ext-> 验证
@@ -499,10 +504,10 @@
       },
 
       doLayout() {
+        this.layout.updateColumnsWidth();
         if (this.shouldUpdateHeight) {
           this.layout.updateElsHeight();
         }
-        this.layout.updateColumnsWidth();
       },
 
       // ext-> 设置行样式
@@ -898,7 +903,8 @@
     data() {
       const store = new TableStore(this, {
         rowKey: this.rowKey,
-        defaultExpandAll: this.defaultExpandAll
+        defaultExpandAll: this.defaultExpandAll,
+        selectOnIndeterminate: this.selectOnIndeterminate
       });
       const layout = new TableLayout({
         store,

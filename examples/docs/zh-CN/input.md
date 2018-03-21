@@ -802,6 +802,7 @@ export default {
 |---------- |-------------- |---------- |--------------------------------  |-------- |
 | disabled-tips | 禁用表单验证弹出提示功能 | boolean | — | false |
 | kind | 绑定的数值类型 | String | string 或 number | string |
+| disputed | 代替禁用功能，兼容IE | boolean | — | false |
 
 
 * **原始属性**
@@ -851,7 +852,8 @@ export default {
 ### Input Methods
 | 方法名 | 说明 | 参数 |
 | ---- | ---- | ---- |
-| focus | 使 input 获取焦点 | - |
+| focus | 使 input 获取焦点 | — |
+| select | 选中 input 中的文字 | — |
 
 ### Autocomplete Attributes
 
@@ -883,3 +885,8 @@ export default {
 | 事件名称 | 说明 | 回调参数 |
 |---------|--------|---------|
 | select | 点击选中建议项时触发 | 选中建议项 |
+
+### Autocomplete Methods
+| 方法名 | 说明 | 参数 |
+| ---- | ---- | ---- |
+| focus | 使 input 获取焦点 | - |

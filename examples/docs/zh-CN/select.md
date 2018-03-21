@@ -91,8 +91,8 @@
           value: 'Guangzhou',
           label: '广州'
         }],
-        value: '',
-        value2: '',
+        value: '选项1',
+        value2: '选项1',
         value3: '',
         value4: '',
         value5: [],
@@ -143,13 +143,13 @@
 :::demo `v-model`的值为当前被选中的`el-option`的 value 属性值
 ```html
 <template>
-  <el-select v-model="value" placeholder="请选择">
-    <el-option
+  <el-select v-model="value" placeholder="请选择" :options-data="options" disputed>
+    <!-- <el-option
       v-for="item in options"
       :key="item.value"
       :label="item.label"
       :value="item.value">
-    </el-option>
+    </el-option> -->
   </el-select>
 </template>
 
@@ -661,6 +661,12 @@
 | 参数      | 说明          | 类型      | 可选值                           | 默认值  |
 |---------- |-------------- |---------- |--------------------------------  |-------- |
 | disabled-tips | 禁用表单验证弹出提示功能 | boolean | — | false |
+| multi-split | 多选时，翻译分隔符 | String | — | ‘/’ |
+| translated | 转化为只读文本翻译组件 | boolean | — | false |
+| disputed | 代替禁用功能，兼容IE | boolean | — | false |
+| tabindex | Tab 序值 | String | — | — |
+| label-val | options-data 数据项自定义标签和值属性 | Object | — | {label:'label', value: 'value', disabled: 'disabled'} |
+| options-data | 禁用表单验证弹出提示功能 | Array | — | — |
 
 
 * **原始属性**

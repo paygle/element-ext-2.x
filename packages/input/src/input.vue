@@ -4,6 +4,7 @@
     inputSize ? 'el-input--' + inputSize : '',
     {
       'is-disabled': inputDisabled,
+      'is-disputed': disputed,
       'el-input-group': $slots.prepend || $slots.append,
       'el-input-group--append': $slots.append,
       'el-input-group--prepend': $slots.prepend,
@@ -25,6 +26,7 @@
         class="el-input__inner"
         v-bind="$props"
         :disabled="inputDisabled"
+        :readonly="readonly || disputed"
         :autocomplete="autoComplete"
         :value="currentValue"
         ref="input"
@@ -83,6 +85,7 @@
       @input="handleInput"
       ref="textarea"
       v-bind="$props"
+      :readonly="readonly || disputed"
       :disabled="inputDisabled"
       :style="[textareaStyle, displayStyl]"
       @focus="handleFocus"
@@ -202,6 +205,7 @@
         default: false
       },
       getFillStyl: Function, // ext-> 获取填充样式，优先级低于比较样式，返回Object样式对象
+      disputed: Boolean, // ext-> 代替禁用
       disabledTips: Boolean // ext-> 禁用表单弹窗提示
     },
 
@@ -280,7 +284,7 @@
         }
         this.setMessageTips(); // ext-> 信息超出边界弹出提示
       },
-      inputSelect() {
+      select() {
         (this.$refs.input || this.$refs.textarea).select();
       },
       resizeTextarea() {
@@ -407,7 +411,7 @@
     },
 
     created() {
-      this.$on('inputSelect', this.inputSelect);
+      this.$on('inputSelect', this.select);
       this.$on('compare-style', this.setCompareStyle); // ext-> 比较样式
       this.customfillStyl(this.value); // ext-> fill style
     },

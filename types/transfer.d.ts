@@ -1,6 +1,8 @@
 import { CreateElement, VNode } from 'vue'
 import { ElementUIComponent } from './component'
 
+export type TransferPanelPosition = 'left' | 'right'
+
 export interface TransferData {
   key: any,
   label: string,

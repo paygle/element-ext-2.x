@@ -257,7 +257,7 @@
         default: true
       },
 
-      stripe: { // 扩展修改-> 默认条纹
+      stripe: { // ext-> 默认条纹
         type: Boolean,
         default: true
       },
@@ -309,7 +309,12 @@
 
       tooltipEffect: String,
 
-      spanMethod: Function
+      spanMethod: Function,
+
+      selectOnIndeterminate: {
+        type: Boolean,
+        default: true
+      }
     },
 
     components: {
@@ -436,10 +441,10 @@
       },
 
       doLayout() {
+        this.layout.updateColumnsWidth();
         if (this.shouldUpdateHeight) {
           this.layout.updateElsHeight();
         }
-        this.layout.updateColumnsWidth();
       }
     },
 

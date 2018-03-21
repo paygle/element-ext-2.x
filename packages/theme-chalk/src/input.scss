@@ -41,7 +41,7 @@
       background-color: $--input-disabled-fill;
       border-color: $--input-disabled-border;
       color: $--input-disabled-color;
-      cursor: not-allowed;
+      cursor: default; /* ext-> modify */
 
       &::placeholder {
         color: $--input-disabled-placeholder-color;
@@ -153,12 +153,12 @@
     }
   }
 
-  @include when(disabled) {
+  @mixin disabledtmpl($cursor) { /* ext-> add */
     .el-input__inner {
       background-color: $--input-disabled-fill;
       border-color: $--input-disabled-border;
       color: $--input-disabled-color;
-      cursor: not-allowed;
+      cursor: $cursor;
 
       &::placeholder {
         color: $--input-disabled-placeholder-color;
@@ -168,6 +168,14 @@
     .el-input__icon {
       cursor: not-allowed;
     }
+  }
+
+  @include when(disabled) { /* ext-> modify */
+    @include disabledtmpl(not-allowed);
+  }
+
+  @include when(disputed) { /* ext-> add */
+    @include disabledtmpl(default);
   }
 
   @include m(suffix) {

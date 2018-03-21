@@ -120,8 +120,8 @@ $--index-popper: 2000 !default;
 
 /* Disable base
 -------------------------- */
-$--disabled-fill-base: $--background-color-base !default;
-$--disabled-color-base: $--color-text-placeholder !default;
+$--disabled-fill-base: $--color-f8f8f8 !default; /* ext-> modify */
+$--disabled-color-base: $--color-gy999 !default; /* ext-> modify */
 $--disabled-border-base: $--border-color-light !default;
 
 /* Icon

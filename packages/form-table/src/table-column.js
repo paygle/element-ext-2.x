@@ -311,7 +311,7 @@ export default {
 
     if (type === 'expand') {
       // ext-> expand 隐藏展开图标
-      if (this.owner.store.table.expandIconHidden) {
+      if (owner.store.table.expandIconHidden) {
         column.realWidth = 1;
         hiddenExpandIcon = 'hidden-expand-icon';
       }
@@ -456,6 +456,12 @@ export default {
     index(newVal) {
       if (this.columnConfig) {
         this.columnConfig.index = newVal;
+      }
+    },
+
+    formatter(newVal) {
+      if (this.columnConfig) {
+        this.columnConfig.formatter = newVal;
       }
     }
   },

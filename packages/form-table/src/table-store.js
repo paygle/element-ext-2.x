@@ -464,8 +464,12 @@ TableStore.prototype.mutations = {
   toggleAllSelection: debounce(10, function(states) {
     const data = states.data || [];
     if (data.length === 0) return;
-    const value = !states.isAllSelected;
     const selection = this.states.selection;
+    // when only some rows are selected (but not all), select or deselect all of them
+    // depending on the value of selectOnIndeterminate
+    const value = states.selectOnIndeterminate
+      ? !states.isAllSelected
+      : !(states.isAllSelected || selection.length);
     let selectionChanged = false;
 
     data.forEach((item, index) => {
@@ -885,7 +889,7 @@ TableStore.prototype.toggleRowSelection = function(row, selected) {
 
 TableStore.prototype.toggleRowExpansion = function(row, expanded) {
 
-  function expandOneRow(sto) { // ext-> modify
+  function expandRow(sto) { // ext-> modify
     const changed = toggleRowExpansion(sto.states, row, expanded);
     if (changed) {
       sto.table.$emit('expand-change', row, sto.states.expandRows);
@@ -901,10 +905,10 @@ TableStore.prototype.toggleRowExpansion = function(row, expanded) {
       this.states.expandRows, // 已展开行集合
       this.states.expandRows.indexOf(row) > -1 // 是否已经展开
     )) {
-      expandOneRow(this);
+      expandRow(this);
     }
   } else {
-    expandOneRow(this);
+    expandRow(this);
   }
 };
 
