@@ -95,13 +95,13 @@
         value2: '选项1',
         value3: '',
         value4: '',
-        value5: [],
+        value5: ['选项1','选项2'],
         value6: '',
         value7: '',
         value8: '',
         value9: '',
         value10: [],
-        value11: [],
+        value11: ['选项1','选项2'],
         loading: false,
         states: ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming"]
       };
@@ -186,7 +186,7 @@
 :::demo 在`el-option`中，设定`disabled`值为 true，即可禁用该选项
 ```html
 <template>
-  <el-select v-model="value2" placeholder="请选择">
+  <el-select v-model="value2" placeholder="请选择" clearable>
     <el-option
       v-for="item in options2"
       :key="item.value"
@@ -667,6 +667,7 @@
 | tabindex | Tab 序值 | String | — | — |
 | label-val | options-data 数据项自定义标签和值属性 | Object | — | {label:'label', value: 'value', disabled: 'disabled'} |
 | options-data | 禁用表单验证弹出提示功能 | Array | — | — |
+| drop-minwidth | 下拉列表最小宽度 | Number | — | 与输入框同宽 |
 
 
 * **原始属性**

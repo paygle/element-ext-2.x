@@ -12,7 +12,7 @@
         :name="name"
         :id="id"
         :size="selectSize"
-        disputed>
+        readonly>
       </el-input>
     </div>
     <div
@@ -174,7 +174,7 @@
   const sizeMap = {
     'medium': 36,
     'small': 32,
-    'mini': 28
+    'mini': 26 // ext-> modify
   };
 
   // ext-> add, init field opts
@@ -222,6 +222,7 @@
       iconClass() {
         let criteria = this.clearable &&
           !this.selectDisabled &&
+          !this.disputed && // ext-> add
           this.inputHovering &&
           !this.multiple &&
           this.value !== undefined &&
@@ -324,6 +325,7 @@
         type: Boolean,
         default: true
       },
+      dropMinwidth: Number, // ext-> 下拉列表最小宽度
       multiSplit: { // ext-> 多选时翻译分隔符
         type: String,
         default: '/'
@@ -665,7 +667,7 @@
           let inputChildNodes = this.$refs.reference.$el.childNodes;
           let input = [].filter.call(inputChildNodes, item => item.tagName === 'INPUT')[0];
           const tags = this.$refs.tags;
-          const sizeInMap = sizeMap[this.selectSize] || 40;
+          const sizeInMap = sizeMap[this.selectSize] || 24; // ext-> modify
           input.style.height = this.selected.length === 0
             ? sizeInMap + 'px'
             : Math.max(
