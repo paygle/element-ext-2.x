@@ -173,7 +173,7 @@
       scopeNamed() { // ext-> 表单作用域
         return this.scopeName || 'ElForm';
       },
-      showInlineMsg() { // ext-> 弹出提示控制
+      showInlineMsg() { // ext-> 弹出提示信息
         return this.showMessage && this.form.showMessage;
       }
     },
@@ -225,11 +225,11 @@
 
         model[this.prop] = this.getTypeData(this.fieldValue, rules);
 
-        validator.validate(model, { firstFields: true }, (errors, fields) => {
+        validator.validate(model, { firstFields: true }, (errors, invalidFields) => {
           this.validateState = !errors ? 'success' : 'error';
           this.validateMessage = errors ? errors[0].message : '';
 
-          callback(this.validateMessage);
+          callback(this.validateMessage, invalidFields);
           if (errors) this.tipContent = this.validateMessage; // ext-> 设置错误信息
         });
       },

@@ -60,7 +60,7 @@
 
     &.is-disabled {
       & .el-input__inner {
-        cursor:  not-allowed;
+        cursor: not-allowed;
 
         &:hover {
           border-color: $--select-disabled-border;

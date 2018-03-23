@@ -102,7 +102,7 @@
           :border="border"
           :store="store"
           :style="{
-            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
+            width: bodyWidth
           }"></table-header>
       </div>
       <div
@@ -121,7 +121,7 @@
           :row-class-name="rowClassName"
           :row-style="rowStyle"
           :style="{
-            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
+            width: bodyWidth
           }">
         </table-body>
         <div
@@ -143,7 +143,7 @@
           :summary-method="summaryMethod"
           :store="store"
           :style="{
-            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
+            width: bodyWidth
           }"></table-footer>
       </div>
     </div>
@@ -166,7 +166,7 @@
           :border="border"
           :store="store"
           :style="{
-            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
+            width: bodyWidth
           }"></table-header>
       </div>
       <div
@@ -185,7 +185,7 @@
           :row-style="rowStyle"
           :highlight="highlightCurrentRow"
           :style="{
-            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
+            width: bodyWidth
           }">
         </table-body>
       </div>
@@ -201,7 +201,7 @@
           :summary-method="summaryMethod"
           :store="store"
           :style="{
-            width: layout.bodyWidth ? layout.bodyWidth + 'px' : ''
+            width: bodyWidth
           }"></table-footer>
       </div>
     </div>
